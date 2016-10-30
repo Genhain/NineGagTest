@@ -1,0 +1,6 @@
+framework module Pods_NineGagTest {
+  umbrella header "Pods-NineGagTest-umbrella.h"
+
+  export *
+  module * { export * }
+}
