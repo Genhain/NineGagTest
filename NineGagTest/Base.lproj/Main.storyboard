@@ -109,6 +109,7 @@
                     </view>
                     <connections>
                         <outlet property="homePageCollectionView" destination="cee-n8-bff" id="Hye-bF-X55"/>
+                        <outlet property="horizontalCollectionView" destination="kbt-Rw-zdE" id="npH-do-Ecv"/>
                         <outlet property="menuBarView" destination="Ddg-jf-pl2" id="aaf-ww-3qY"/>
                     </connections>
                 </viewController>

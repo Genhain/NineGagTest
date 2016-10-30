@@ -21,6 +21,7 @@ class HomePageController: UIViewController
     
     @IBOutlet weak var menuBarView: MenuBarView!
     @IBOutlet weak var homePageCollectionView: HomePageCollectionView!
+    @IBOutlet weak var horizontalCollectionView: HorizontalContentCollectionView!
     
     private let contentDelegationManager = ContentSelectionManager()
     
@@ -41,7 +42,7 @@ class HomePageController: UIViewController
         let third = ContentModel(contentImageName: "Archer", titleText: "Danger Zone")
         
        
-        horizontalDataProvider = CellContentDataProvider(contents: [third,second],
+        horizontalDataProvider = CellContentDataProvider(contents: [third,second,first],
                                                          dataSource: horizontalDataSource,
                                                          delegate: horizontalDataSource,
                                                          layout: UICollectionViewFlowLayout())
@@ -55,6 +56,8 @@ class HomePageController: UIViewController
         
         homePageCollectionView.dataSource = verticalDataProvider.dataSource
         homePageCollectionView.delegate = verticalDataProvider.delegate
+        horizontalCollectionView.dataSource = horizontalDataProvider.dataSource
+        horizontalCollectionView.delegate = horizontalDataProvider.delegate
         
         horizontalDataSource.data = horizontalDataProvider
         verticalDataSource.data = verticalDataProvider
