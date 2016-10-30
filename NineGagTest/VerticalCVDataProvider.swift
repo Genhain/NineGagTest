@@ -20,6 +20,10 @@ extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDe
         
         return cell
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+    }
 }
 
 extension VerticalCVDataProvider: UICollectionViewDelegateFlowLayout

@@ -86,9 +86,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="201"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </view>
-                                        <connections>
-                                            <outlet property="collectionView" destination="kbt-Rw-zdE" id="PxL-cp-0r0"/>
-                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
