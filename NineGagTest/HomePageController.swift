@@ -53,8 +53,8 @@ class HomePageController: UIViewController
         
         dataSource.append(contentsOf: [horizontalDataProvider,verticalDataProvider])
         
-        homePageCollectionView.dataSource = self
-        homePageCollectionView.delegate = self
+        homePageCollectionView.dataSource = verticalDataProvider.dataSource
+        homePageCollectionView.delegate = verticalDataProvider.delegate
         
         horizontalDataSource.data = horizontalDataProvider
         verticalDataSource.data = verticalDataProvider
@@ -63,49 +63,6 @@ class HomePageController: UIViewController
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-}
-
-extension HomePageController: UICollectionViewDataSource, UICollectionViewDelegate
-{
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        let cvDataSource: UICollectionViewDataSource = self.dataSource[section].dataSource
-        
-        return cvDataSource.collectionView(collectionView, numberOfItemsInSection: section)
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return dataSource.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        var collectionViewToPass = collectionView
-        
-        let cvDataSource: UICollectionViewDataSource = self.dataSource[indexPath.section].dataSource
-        
-        if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HorizontalContentContainerCell.self), for: indexPath) as! HorizontalContentContainerCell
-            
-            
-        }
-        
-        return cvDataSource.collectionView(collectionViewToPass, cellForItemAt: indexPath)
-    }
-}
-
-extension HomePageController: UICollectionViewDelegateFlowLayout
-{
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let cvDelegate: UICollectionViewDelegateFlowLayout = self.dataSource[indexPath.section].delegate as! UICollectionViewDelegateFlowLayout
-        
-        return cvDelegate.collectionView!(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
     }
 }
 
