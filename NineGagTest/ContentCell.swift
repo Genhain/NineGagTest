@@ -110,24 +110,37 @@ class ContentCell: UICollectionViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
+    let imageCache: NSCache = NSCache<NSString, UIImage>()
+    
     func initialiseData(content: ContentModel) {
         self.contentModel = content
         
+        
+        
         if let contentImageName = self.contentModel?.contentImageName {
-            DispatchQueue.global().async {
-                
-                let imageURL = URL(string: contentImageName)
-                guard let imageData = NSData(contentsOf: imageURL! as URL) else {
-                    return
-                }
-                
+            
+            if let imageFromCache = imageCache.object(forKey: contentImageName as NSString) {
+                self.contentImageView.image = imageFromCache
+            }
+            else {
+                DispatchQueue.global().async {
                     
-                DispatchQueue.main.async {
-                    self.contentImageView.image = UIImage(data: imageData as Data)
-                    print("here: ", self.contentImageView.image?.size)
-                    self.setNeedsLayout()
+                    let imageURL = URL(string: contentImageName)
+                    guard let imageData = NSData(contentsOf: imageURL! as URL) else {
+                        return
+                    }
+                     
+                    DispatchQueue.main.async {
+                        let imageToCache = UIImage(data: imageData as Data)
+                        
+                        self.imageCache.setObject(imageToCache!, forKey: contentImageName as NSString)
+                        
+                        self.contentImageView.image = imageToCache
+                        
+                        self.setNeedsLayout()
+                    }
+                    
                 }
-                
             }
         }
         self.contentImageView.contentMode = .scaleAspectFill
