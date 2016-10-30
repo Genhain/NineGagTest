@@ -113,11 +113,29 @@ class ContentCell: UICollectionViewCell
     func initialiseData(content: ContentModel) {
         self.contentModel = content
         
-        self.contentImageView.image = UIImage(named: (self.contentModel?.contentImageName)!)
+        if let contentImageName = self.contentModel?.contentImageName {
+            DispatchQueue.global().async {
+                
+                let imageURL = URL(string: contentImageName)
+                guard let imageData = NSData(contentsOf: imageURL! as URL) else {
+                    return
+                }
+                
+                    
+                DispatchQueue.main.async {
+                    self.contentImageView.image = UIImage(data: imageData as Data)
+                    print("here: ", self.contentImageView.image?.size)
+                    self.setNeedsLayout()
+                }
+                
+            }
+        }
         self.contentImageView.contentMode = .scaleAspectFill
         self.contentImageView.clipsToBounds = true
         
-        self.titleLabel.text = self.contentModel?.titleText
+        if let titleText = self.contentModel?.titleText {
+            self.titleLabel.text = titleText
+        }
         self.titleLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 15)
     }
 }

@@ -120,9 +120,9 @@
 		0893FBDC1DC5247900F6F03F /* Content Collection */ = {
 			isa = PBXGroup;
 			children = (
+				08FB523A1DC68C4A002EE3D1 /* Model */,
 				08B06FFA1DC607F60001FA1A /* CellContentDataProvider.swift */,
 				0893FBDF1DC5281500F6F03F /* ContentCell.swift */,
-				08B06FF11DC5B0EF0001FA1A /* ContentModel.swift */,
 				0893FBDD1DC524A800F6F03F /* HomePageCollectionView.swift */,
 				08B06FF71DC5EE210001FA1A /* Horizontal */,
 				08B070011DC661C70001FA1A /* VerticalCVDataProvider.swift */,
@@ -222,6 +222,14 @@
 				082EBC7A1DC4B01C00F42F1B /* ContentSelectionManagerTests.swift */,
 			);
 			name = Utility;
+			sourceTree = "<group>";
+		};
+		08FB523A1DC68C4A002EE3D1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				08B06FF11DC5B0EF0001FA1A /* ContentModel.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		C2E4D24F46BDA1A7C78B3902 /* Pods */ = {
