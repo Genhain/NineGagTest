@@ -49,6 +49,19 @@ class ContentCell: UICollectionViewCell
         
         super.init(frame: frame)
         
+        self.setUpCell()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.contentImageView = UIImageView()
+        self.titleLabel = UILabel()
+        
+        super.init(coder: aDecoder)
+        
+        self.setUpCell()
+    }
+    
+    func setUpCell() {
         contentImageView.translatesAutoresizingMaskIntoConstraints = false
         seperatorView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -75,7 +88,7 @@ class ContentCell: UICollectionViewCell
             contentImageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
             contentImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
             contentImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -60)
-        ])
+            ])
         
         NSLayoutConstraint.activate([
             seperatorView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
@@ -106,16 +119,9 @@ class ContentCell: UICollectionViewCell
             ])
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
-    let imageCache: NSCache = NSCache<NSString, UIImage>()
-    
-    func initialiseData(content: ContentModel) {
+    func initialiseData(content: ContentModel, imageCache: NSCache<NSString, UIImage>, completion: @escaping () -> Void) {
         self.contentModel = content
-        
-        
         
         if let contentImageName = self.contentModel?.contentImageName {
             
@@ -133,11 +139,13 @@ class ContentCell: UICollectionViewCell
                     DispatchQueue.main.async {
                         let imageToCache = UIImage(data: imageData as Data)
                         
-                        self.imageCache.setObject(imageToCache!, forKey: contentImageName as NSString)
+                        imageCache.setObject(imageToCache!, forKey: contentImageName as NSString)
                         
                         self.contentImageView.image = imageToCache
                         
                         self.setNeedsLayout()
+                        
+                        completion()
                     }
                     
                 }

@@ -5,6 +5,7 @@ import UIKit
 class VerticalCVDataProvider: NSObject
 {
     var data: CellContentDataProvider?
+    let imageCache: NSCache = NSCache<NSString, UIImage>()
 }
 
 extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDelegate
@@ -14,9 +15,14 @@ extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: verticalCellId), for: indexPath) as! ContentCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ContentCell.self), for: indexPath) as! ContentCell
         
-        cell.initialiseData(content: self.data!.contents[indexPath.item])
+
+        cell.initialiseData(content: self.data!.contents[indexPath.item], imageCache: self.imageCache) {
+            collectionView.reloadData()
+            collectionView.invalidateIntrinsicContentSize()
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
         
         return cell
     }
@@ -29,15 +35,15 @@ extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDe
 extension VerticalCVDataProvider: UICollectionViewDelegateFlowLayout
 {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    
-         let contentModel = self.data!.contents[indexPath.item]
-         let imageView = UIImageView(image: UIImage(named: contentModel.contentImageName))
         
-        if imageView.image == nil {
+        let contentModel = self.data!.contents[indexPath.item]
+        let image = imageCache.object(forKey: contentModel.contentImageName as NSString)
+        
+        if image == nil {
             return CGSize(width: collectionView.frame.width, height: 400)
         }
         
-         let aspectHeight = (imageView.frame.height / imageView.frame.width) * collectionView.frame.width
+         let aspectHeight = ((image?.size.height)! / (image?.size.width)!) * collectionView.frame.width
 
         return CGSize(width: collectionView.frame.width, height: aspectHeight)
     }
