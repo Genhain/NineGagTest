@@ -12,7 +12,7 @@ import UIKit
 
 class NineGagTestTests: XCTestCase {
     
-    var viewController: ViewController!
+    var viewController: HomePageController!
     
     override func setUp() {
         super.setUp()
@@ -21,7 +21,7 @@ class NineGagTestTests: XCTestCase {
         let storyboard = UIStoryboard(name: "Main",
                                       bundle: Bundle.main)
         
-        viewController = storyboard.instantiateInitialViewController() as! ViewController
+        viewController = storyboard.instantiateInitialViewController() as! HomePageController
         
         UIApplication.shared.keyWindow!.rootViewController = viewController
         
@@ -35,8 +35,8 @@ class NineGagTestTests: XCTestCase {
     
     func test_ScrollView_notNil()
     {
-        XCTAssertNotNil(viewController.homePageScrollView);
-    }
+        XCTAssertNotNil(viewController.homePageCollectionView);
+    } 
     
     func test_CategoryHeaderView_notNil()
     {

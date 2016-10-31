@@ -2,6 +2,22 @@ import XCTest
 import UIKit
 @testable import NineGagTest
 
+//MARK: MenuItemCell fake
+class MenuItemCellFake: MenuItemCell
+{
+    var wasSetupCalled = false
+    
+    override func setup(menuItem: MenuBarItem) {
+        wasSetupCalled = true
+    }
+}
+
+class  UICollectionViewFake: UICollectionView {
+    override func dequeueReusableCell(withReuseIdentifier identifier: String, for indexPath: IndexPath) -> UICollectionViewCell {
+        return MenuItemCellFake(frame: .zero)
+    }
+}
+
 class MenuBarViewTests: XCTestCase {
     
     var SUT: MenuBarView!
@@ -198,11 +214,50 @@ class MenuBarViewTests: XCTestCase {
     // test for content Delegate Manager
     func testClass_ConformsToContentSelectionDelegate()
     {
-        // Arrange
-    
-        // Act
-    
         // Assert
         XCTAssertTrue(SUT.conforms(to: ContenSelectedDelegate.self))
+    }
+    
+    func testItemForIndex_1ItemAt0_IsItemAt0()
+    {
+        // Arrange
+        let menuItem = MenuBarItem()
+        SUT.addItem(menuBarItem: menuItem)
+    
+        // Act
+        let actualMenuItem = SUT.item(atIndex: 0)
+    
+        // Assert
+        XCTAssertEqual(menuItem, actualMenuItem)
+    }
+    
+    func testItemForIndex_2ItemsAt1_IsItemAt1()
+    {
+        // Arrange
+        let menuItemOne = MenuBarItem()
+        let menuItemTwo = MenuBarItem()
+        SUT.addItem(menuBarItem: menuItemOne)
+        SUT.addItem(menuBarItem: menuItemTwo)
+        
+        // Act
+        let actualMenuItem = SUT.item(atIndex: 1)
+        
+        // Assert
+        XCTAssertEqual(menuItemTwo, actualMenuItem)
+    }
+    
+    func testCollectionViewCellAtIndexPath_MenuItemCellSetupIsCalled()
+    {
+        // Arrange
+
+        //stub
+        SUT.addItem(menuBarItem: MenuBarTextItem("a"))
+        let collectionViewFake = UICollectionViewFake(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        
+        // Act
+        let spy: MenuItemCellFake = SUT.collectionView(collectionViewFake, cellForItemAt: NSIndexPath(row: 0, section: 0) as IndexPath) as! MenuItemCellFake
+        
+        // Assert
+        XCTAssertTrue(spy.wasSetupCalled)
     }
 }
