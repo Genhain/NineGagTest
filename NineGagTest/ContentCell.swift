@@ -129,7 +129,7 @@ class ContentCell: UICollectionViewCell
                     guard let imageData = NSData(contentsOf: imageURL! as URL) else {
                         return
                     }
-                     
+                    
                     DispatchQueue.main.async {
                         let imageToCache = UIImage(data: imageData as Data)
                         
