@@ -20,6 +20,10 @@ extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDe
         
         return cell
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+    }
 }
 
 extension VerticalCVDataProvider: UICollectionViewDelegateFlowLayout
@@ -27,9 +31,13 @@ extension VerticalCVDataProvider: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
          let contentModel = self.data!.contents[indexPath.item]
-         let image = UIImageView(image: UIImage(named: contentModel.contentImageName))
+         let imageView = UIImageView(image: UIImage(named: contentModel.contentImageName))
         
-         let aspectHeight = (image.frame.height / image.frame.width) * collectionView.frame.width
+        if imageView.image == nil {
+            return CGSize(width: collectionView.frame.width, height: 400)
+        }
+        
+         let aspectHeight = (imageView.frame.height / imageView.frame.width) * collectionView.frame.width
 
         return CGSize(width: collectionView.frame.width, height: aspectHeight)
     }

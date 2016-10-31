@@ -110,14 +110,45 @@ class ContentCell: UICollectionViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
+    let imageCache: NSCache = NSCache<NSString, UIImage>()
+    
     func initialiseData(content: ContentModel) {
         self.contentModel = content
         
-        self.contentImageView.image = UIImage(named: (self.contentModel?.contentImageName)!)
+        
+        
+        if let contentImageName = self.contentModel?.contentImageName {
+            
+            if let imageFromCache = imageCache.object(forKey: contentImageName as NSString) {
+                self.contentImageView.image = imageFromCache
+            }
+            else {
+                DispatchQueue.global().async {
+                    
+                    let imageURL = URL(string: contentImageName)
+                    guard let imageData = NSData(contentsOf: imageURL! as URL) else {
+                        return
+                    }
+                    
+                    DispatchQueue.main.async {
+                        let imageToCache = UIImage(data: imageData as Data)
+                        
+                        self.imageCache.setObject(imageToCache!, forKey: contentImageName as NSString)
+                        
+                        self.contentImageView.image = imageToCache
+                        
+                        self.setNeedsLayout()
+                    }
+                    
+                }
+            }
+        }
         self.contentImageView.contentMode = .scaleAspectFill
         self.contentImageView.clipsToBounds = true
         
-        self.titleLabel.text = self.contentModel?.titleText
+        if let titleText = self.contentModel?.titleText {
+            self.titleLabel.text = titleText
+        }
         self.titleLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 15)
     }
 }

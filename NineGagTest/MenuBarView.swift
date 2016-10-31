@@ -17,6 +17,7 @@ class MenuBarView: UIView,UICollectionViewDataSource, UICollectionViewDelegate, 
         super.init(frame: frame)
         
         self.setupCollectionView()
+        self.setupHorizontalSelectionBar()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -24,6 +25,7 @@ class MenuBarView: UIView,UICollectionViewDataSource, UICollectionViewDelegate, 
         super.init(coder: aDecoder)
         
         self.setupCollectionView()
+        self.setupHorizontalSelectionBar()
     }
     
     private func setupCollectionView() {
@@ -41,6 +43,26 @@ class MenuBarView: UIView,UICollectionViewDataSource, UICollectionViewDelegate, 
             collectionView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
             collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0)
             ])
+    }
+    var horizontalBarLeftAnchorConstraint: NSLayoutConstraint?
+    
+    private func setupHorizontalSelectionBar() {
+        let horizontalSelectionBarView = UIView()
+        horizontalSelectionBarView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        horizontalSelectionBarView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(horizontalSelectionBarView)
+        
+        horizontalBarLeftAnchorConstraint = horizontalSelectionBarView.leftAnchor.constraint(equalTo: self.leftAnchor)
+        NSLayoutConstraint.activate([
+            horizontalBarLeftAnchorConstraint!,
+            horizontalSelectionBarView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            horizontalSelectionBarView.heightAnchor.constraint(equalToConstant: 8),
+            horizontalSelectionBarView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier:1/3)
+        ])
+        
+        
+        
+        
     }
     
     //MARK: Functionality
@@ -88,8 +110,16 @@ class MenuBarView: UIView,UICollectionViewDataSource, UICollectionViewDelegate, 
         }
         let menuItem = self.menuBarItems[indexPath.item]
         
+        let x = CGFloat(indexPath.item) * frame.width / 3
+        horizontalBarLeftAnchorConstraint?.constant = x
+        
+        UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseInOut, animations: { 
+            self.layoutIfNeeded()
+        }, completion: nil)
+        
         menuItem.selected()
     }
+    
     
     //MARK: ContenSelectedDelegate
     func selectContent(forIndex: Int) {
@@ -99,14 +129,8 @@ class MenuBarView: UIView,UICollectionViewDataSource, UICollectionViewDelegate, 
 
 class MenuItemCell: UICollectionViewCell {
     
-    public func setup(menuItem: MenuBarItem) {//
+    public func setup(menuItem: MenuBarItem) {
         self.contentView.addSubview(menuItem.iconView)
         menuItem.setupIconView(parentView: self.contentView)
     }
-    
-//    override var isSelected: Bool {
-//        didSet {
-//            
-//        }
-//    }
 }

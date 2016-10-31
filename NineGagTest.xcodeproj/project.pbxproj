@@ -21,7 +21,6 @@
 		08AFCE591DC3C8B500D42DA7 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AFCE581DC3C8B500D42DA7 /* MenuBarView.swift */; };
 		08AFCE5B1DC3CB6B00D42DA7 /* MenuBarViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AFCE5A1DC3CB6B00D42DA7 /* MenuBarViewTests.swift */; };
 		08B06FF21DC5B0EF0001FA1A /* ContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B06FF11DC5B0EF0001FA1A /* ContentModel.swift */; };
-		08B06FF41DC5DB010001FA1A /* HorizontalContentContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B06FF31DC5DB010001FA1A /* HorizontalContentContainerCell.swift */; };
 		08B06FF91DC5F5A10001FA1A /* HorizontalCVDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B06FF81DC5F5A10001FA1A /* HorizontalCVDataProvider.swift */; };
 		08B06FFB1DC607F60001FA1A /* CellContentDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B06FFA1DC607F60001FA1A /* CellContentDataProvider.swift */; };
 		08B06FFF1DC639AE0001FA1A /* HorizontalContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B06FFE1DC639AE0001FA1A /* HorizontalContentCell.swift */; };
@@ -72,7 +71,6 @@
 		08AFCE581DC3C8B500D42DA7 /* MenuBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		08AFCE5A1DC3CB6B00D42DA7 /* MenuBarViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarViewTests.swift; sourceTree = "<group>"; };
 		08B06FF11DC5B0EF0001FA1A /* ContentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentModel.swift; sourceTree = "<group>"; };
-		08B06FF31DC5DB010001FA1A /* HorizontalContentContainerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalContentContainerCell.swift; sourceTree = "<group>"; };
 		08B06FF81DC5F5A10001FA1A /* HorizontalCVDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalCVDataProvider.swift; sourceTree = "<group>"; };
 		08B06FFA1DC607F60001FA1A /* CellContentDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellContentDataProvider.swift; sourceTree = "<group>"; };
 		08B06FFE1DC639AE0001FA1A /* HorizontalContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalContentCell.swift; sourceTree = "<group>"; };
@@ -122,9 +120,9 @@
 		0893FBDC1DC5247900F6F03F /* Content Collection */ = {
 			isa = PBXGroup;
 			children = (
+				08FB523A1DC68C4A002EE3D1 /* Model */,
 				08B06FFA1DC607F60001FA1A /* CellContentDataProvider.swift */,
 				0893FBDF1DC5281500F6F03F /* ContentCell.swift */,
-				08B06FF11DC5B0EF0001FA1A /* ContentModel.swift */,
 				0893FBDD1DC524A800F6F03F /* HomePageCollectionView.swift */,
 				08B06FF71DC5EE210001FA1A /* Horizontal */,
 				08B070011DC661C70001FA1A /* VerticalCVDataProvider.swift */,
@@ -203,7 +201,6 @@
 			isa = PBXGroup;
 			children = (
 				08FB52381DC67B16002EE3D1 /* HorizontalContentCollectionView.swift */,
-				08B06FF31DC5DB010001FA1A /* HorizontalContentContainerCell.swift */,
 				08B06FFE1DC639AE0001FA1A /* HorizontalContentCell.swift */,
 				08B06FF81DC5F5A10001FA1A /* HorizontalCVDataProvider.swift */,
 			);
@@ -225,6 +222,14 @@
 				082EBC7A1DC4B01C00F42F1B /* ContentSelectionManagerTests.swift */,
 			);
 			name = Utility;
+			sourceTree = "<group>";
+		};
+		08FB523A1DC68C4A002EE3D1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				08B06FF11DC5B0EF0001FA1A /* ContentModel.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		C2E4D24F46BDA1A7C78B3902 /* Pods */ = {
@@ -547,7 +552,6 @@
 				08B06FFF1DC639AE0001FA1A /* HorizontalContentCell.swift in Sources */,
 				08F092F61DC4742A0012AFFA /* MenuBarItem.swift in Sources */,
 				08B06FF91DC5F5A10001FA1A /* HorizontalCVDataProvider.swift in Sources */,
-				08B06FF41DC5DB010001FA1A /* HorizontalContentContainerCell.swift in Sources */,
 				08F092FA1DC4938C0012AFFA /* ContentSelectionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
