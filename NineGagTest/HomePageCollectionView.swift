@@ -17,4 +17,3 @@ class HomePageCollectionView: UICollectionView
         self.delegate = cellDataProvider.delegate
     }
 }
-

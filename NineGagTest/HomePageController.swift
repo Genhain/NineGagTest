@@ -24,6 +24,7 @@ class HomePageController: UIViewController
     @IBOutlet weak var menuBarView: MenuBarView!
     @IBOutlet weak var homePageCollectionView: HomePageCollectionView!
     @IBOutlet weak var horizontalCollectionView: HorizontalContentCollectionView!
+    @IBOutlet weak var horizontalCollectionViewHeightConstraint: NSLayoutConstraint!
     
     private let contentDelegationManager = ContentSelectionManager()
     
@@ -46,11 +47,12 @@ class HomePageController: UIViewController
         
        
         horizontalDataProvider = CellContentDataProvider(contents: [third,second,first],
-                                                         dataSource: horizontalDataSource,
-                                                         delegate: horizontalDataSource,
+                                                         dataSource: self.horizontalDataSource,
+                                                         delegate: self.horizontalDataSource,
                                                          layout: UICollectionViewFlowLayout())
         
-        self.fetchJSON { 
+        self.fetchJSON {
+            self.verticalDataSource.contentScrollDelegate = self
             self.verticalDataProvider = CellContentDataProvider(contents: self.contentData,
                                                            dataSource: self.verticalDataSource,
                                                            delegate: self.verticalDataSource,
@@ -115,6 +117,24 @@ class HomePageController: UIViewController
         }
         
         completion()
+    }
+}
+
+private var contentYOffsetDelta: CGFloat = 0
+extension HomePageController: contentScrollDelegate
+{
+    func contentViewDidScroll(_ contentView: UIScrollView, contentOffset: CGPoint) {
+        
+        contentYOffsetDelta += -contentOffset.y
+        
+        contentYOffsetDelta = min(contentYOffsetDelta, 0)
+        contentYOffsetDelta = max(contentYOffsetDelta, -200)
+        
+        if contentYOffsetDelta > -200 {
+            contentView.contentOffset = .zero
+        }
+       
+        horizontalCollectionViewHeightConstraint.constant = CGFloat(contentYOffsetDelta)
     }
 }
 

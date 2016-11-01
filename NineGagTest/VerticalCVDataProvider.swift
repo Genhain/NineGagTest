@@ -2,9 +2,15 @@
 import Foundation
 import UIKit
 
+protocol contentScrollDelegate
+{
+    func contentViewDidScroll(_ contentView: UIScrollView, contentOffset: CGPoint)
+}
+
 class VerticalCVDataProvider: NSObject
 {
     var data: CellContentDataProvider?
+    var contentScrollDelegate: contentScrollDelegate?
     let imageCache: NSCache = NSCache<NSString, UIImage>()
 }
 
@@ -28,7 +34,8 @@ extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
+        let offset = scrollView.contentOffset
+        self.contentScrollDelegate?.contentViewDidScroll(scrollView,contentOffset: offset)
     }
 }
 
