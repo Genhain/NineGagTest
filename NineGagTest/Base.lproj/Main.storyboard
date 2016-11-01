@@ -105,10 +105,10 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="homePageCollectionView" destination="cee-n8-bff" id="Hye-bF-X55"/>
                         <outlet property="horizontalCollectionView" destination="kbt-Rw-zdE" id="npH-do-Ecv"/>
                         <outlet property="horizontalCollectionViewHeightConstraint" destination="CGH-br-efS" id="l1E-fJ-xiO"/>
                         <outlet property="menuBarView" destination="Ddg-jf-pl2" id="aaf-ww-3qY"/>
+                        <outlet property="verticalCollectionView" destination="cee-n8-bff" id="DuV-LW-XWr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NQ4-K8-8Qr" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -11,17 +11,17 @@ class HorizontalCVDataProvider: CollectionViewDataProvider
 extension HorizontalCVDataProvider: UICollectionViewDataSource, UICollectionViewDelegate
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data!.contents.count
+        return data!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: HorizontalContentCell.self), for: indexPath) as! HorizontalContentCell
         
-        cell.contentImageView.image = UIImage(named: data!.contents[indexPath.item].contentImageName)
+        cell.contentImageView.image = UIImage(named: data![indexPath.item].contentImageName)
         cell.contentImageView.contentMode = .scaleAspectFill
         cell.contentImageView.layer.masksToBounds = true
         
-        cell.contentTextLabel.text = data!.contents[indexPath.item].titleText
+        cell.contentTextLabel.text = data![indexPath.item].titleText
         
         
         return cell

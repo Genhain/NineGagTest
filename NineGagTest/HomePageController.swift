@@ -14,15 +14,14 @@ let demoJSONURLString = "https://api.myjson.com/bins/3uaoq"
 
 class HomePageController: UIViewController
 {
+    // Collections
     var contentData: [ContentModel] = []
-    var dataSource: [CellContentDataProvider] = []
-    let verticalDataSource = VerticalCVDataProvider()
-    let horizontalDataSource = HorizontalCVDataProvider()
-    var horizontalDataProvider: CellContentDataProvider!
-    var verticalDataProvider: CellContentDataProvider!
+    
+    let verticalCVDataProvider = VerticalCVDataProvider()
+    let horizontalCVDataProvider = HorizontalCVDataProvider()
     
     @IBOutlet weak var menuBarView: MenuBarView!
-    @IBOutlet weak var homePageCollectionView: HomePageCollectionView!
+    @IBOutlet weak var verticalCollectionView: HomePageCollectionView!
     @IBOutlet weak var horizontalCollectionView: HomePageCollectionView!
     @IBOutlet weak var horizontalCollectionViewHeightConstraint: NSLayoutConstraint!
     
@@ -38,36 +37,22 @@ class HomePageController: UIViewController
         menuBarView.addItem(menuBarItem: MenuBarTextItem("TRENDING"))
         menuBarView.addItem(menuBarItem: MenuBarTextItem("FRESH"))
         
-        // Mock data
-        
+        // Mock data, in reality will be brought in via JSon
         let first = ContentModel(contentImageName: "Rammit", imageWidth: 600, imageHeight: 596, titleText: "OMW LOLOLOL TROLL Face")
         let second = ContentModel(contentImageName: "Jake", imageWidth: 1280, imageHeight: 1810, titleText: "Muh-muh-muh Money")
         let third = ContentModel(contentImageName: "Archer", imageWidth: 2448, imageHeight: 3264, titleText: "Danger Zone")
         
         self.fetchJSON {
+            self.verticalCVDataProvider.contentScrollDelegate = self
             
-            self.horizontalDataProvider = CellContentDataProvider(contents: [third,second,first],
-                                                             dataSource: self.horizontalDataSource,
-                                                             delegate: self.horizontalDataSource,
-                                                             layout: UICollectionViewFlowLayout())
+            self.horizontalCVDataProvider.data = [third,second,first]
+            self.verticalCVDataProvider.data = self.contentData
             
-            self.verticalDataSource.contentScrollDelegate = self
-            self.verticalDataProvider = CellContentDataProvider(contents: self.contentData,
-                                                           dataSource: self.verticalDataSource,
-                                                           delegate: self.verticalDataSource,
-                                                           layout: UICollectionViewFlowLayout())
-            
-            self.homePageCollectionView.setCollectionViewDataProvider(cellDataProvider: self.verticalDataProvider)
-            
-            self.horizontalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.horizontalDataProvider)
-            
-            self.horizontalDataSource.data = self.horizontalDataProvider
-            self.verticalDataSource.data = self.verticalDataProvider
-            
-            self.dataSource.append(contentsOf: [self.horizontalDataProvider,self.verticalDataProvider])
+            self.verticalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.verticalCVDataProvider)
+            self.horizontalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.horizontalCVDataProvider)
             
             DispatchQueue.main.async {
-                self.homePageCollectionView.reloadData()
+                self.verticalCollectionView.reloadData()
                 self.horizontalCollectionView.reloadData()
             }
             

@@ -4,9 +4,9 @@ import UIKit
 
 class HomePageCollectionView: UICollectionView
 {
-    func setCollectionViewDataProvider(cellDataProvider: CellContentDataProvider)
+    func setCollectionViewDataProvider<D: UICollectionViewDataSource & UICollectionViewDelegate>(cellDataProvider: D)
     {
-        self.dataSource = cellDataProvider.dataSource
-        self.delegate = cellDataProvider.delegate
+        self.dataSource = cellDataProvider
+        self.delegate = cellDataProvider
     }
 }

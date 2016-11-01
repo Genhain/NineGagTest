@@ -14,14 +14,14 @@ extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data!.contents.count
+        return data!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ContentCell.self), for: indexPath) as! ContentCell
         
 
-        cell.initialiseData(content: self.data!.contents[indexPath.item], imageCache: self.imageCache) {
+        cell.initialiseData(content: self.data![indexPath.item], imageCache: self.imageCache) {
             collectionView.reloadData()
             collectionView.invalidateIntrinsicContentSize()
             collectionView.collectionViewLayout.invalidateLayout()
@@ -40,7 +40,7 @@ extension VerticalCVDataProvider: UICollectionViewDelegateFlowLayout
 {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let contentModel = self.data!.contents[indexPath.item]
+        let contentModel = self.data![indexPath.item]
         let image = imageCache.object(forKey: contentModel.contentImageName as NSString)
         
         if image == nil {
