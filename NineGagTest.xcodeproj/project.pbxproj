@@ -27,7 +27,7 @@
 		08B070021DC661C70001FA1A /* VerticalCVDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B070011DC661C70001FA1A /* VerticalCVDataProvider.swift */; };
 		08F092F61DC4742A0012AFFA /* MenuBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F092F51DC4742A0012AFFA /* MenuBarItem.swift */; };
 		08F092FA1DC4938C0012AFFA /* ContentSelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F092F91DC4938C0012AFFA /* ContentSelectionManager.swift */; };
-		08FB52391DC67B16002EE3D1 /* HorizontalContentCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FB52381DC67B16002EE3D1 /* HorizontalContentCollectionView.swift */; };
+		08FB523C1DC8F95F002EE3D1 /* CollectionViewDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FB523B1DC8F95F002EE3D1 /* CollectionViewDataProvider.swift */; };
 		6A6FDB39BC800200615C7158 /* Pods_NineGagTestUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB0CDAE729E468756AFADD1A /* Pods_NineGagTestUITests.framework */; };
 		9AD0D6561221E71E8F9DDCAC /* Pods_NineGagTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77581034070D581583464390 /* Pods_NineGagTest.framework */; };
 		D83F0528216E325BF6FFF3E2 /* Pods_NineGagTestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D64AB5B2960F80492203EE8 /* Pods_NineGagTestTests.framework */; };
@@ -77,7 +77,7 @@
 		08B070011DC661C70001FA1A /* VerticalCVDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalCVDataProvider.swift; sourceTree = "<group>"; };
 		08F092F51DC4742A0012AFFA /* MenuBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarItem.swift; sourceTree = "<group>"; };
 		08F092F91DC4938C0012AFFA /* ContentSelectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentSelectionManager.swift; sourceTree = "<group>"; };
-		08FB52381DC67B16002EE3D1 /* HorizontalContentCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HorizontalContentCollectionView.swift; sourceTree = "<group>"; };
+		08FB523B1DC8F95F002EE3D1 /* CollectionViewDataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataProvider.swift; sourceTree = "<group>"; };
 		1B925B6294868D99999B03E2 /* Pods-NineGagTestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NineGagTestTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NineGagTestTests/Pods-NineGagTestTests.release.xcconfig"; sourceTree = "<group>"; };
 		5D64AB5B2960F80492203EE8 /* Pods_NineGagTestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NineGagTestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77581034070D581583464390 /* Pods_NineGagTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NineGagTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +126,7 @@
 				0893FBDD1DC524A800F6F03F /* HomePageCollectionView.swift */,
 				08B06FF71DC5EE210001FA1A /* Horizontal */,
 				08B070011DC661C70001FA1A /* VerticalCVDataProvider.swift */,
+				08FB523B1DC8F95F002EE3D1 /* CollectionViewDataProvider.swift */,
 			);
 			name = "Content Collection";
 			sourceTree = "<group>";
@@ -200,7 +201,6 @@
 		08B06FF71DC5EE210001FA1A /* Horizontal */ = {
 			isa = PBXGroup;
 			children = (
-				08FB52381DC67B16002EE3D1 /* HorizontalContentCollectionView.swift */,
 				08B06FFE1DC639AE0001FA1A /* HorizontalContentCell.swift */,
 				08B06FF81DC5F5A10001FA1A /* HorizontalCVDataProvider.swift */,
 			);
@@ -547,8 +547,8 @@
 				08B06FFB1DC607F60001FA1A /* CellContentDataProvider.swift in Sources */,
 				0893FBDE1DC524A800F6F03F /* HomePageCollectionView.swift in Sources */,
 				08AFCE591DC3C8B500D42DA7 /* MenuBarView.swift in Sources */,
+				08FB523C1DC8F95F002EE3D1 /* CollectionViewDataProvider.swift in Sources */,
 				08B06FF21DC5B0EF0001FA1A /* ContentModel.swift in Sources */,
-				08FB52391DC67B16002EE3D1 /* HorizontalContentCollectionView.swift in Sources */,
 				08B06FFF1DC639AE0001FA1A /* HorizontalContentCell.swift in Sources */,
 				08F092F61DC4742A0012AFFA /* MenuBarItem.swift in Sources */,
 				08B06FF91DC5F5A10001FA1A /* HorizontalCVDataProvider.swift in Sources */,

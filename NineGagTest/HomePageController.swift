@@ -23,14 +23,13 @@ class HomePageController: UIViewController
     
     @IBOutlet weak var menuBarView: MenuBarView!
     @IBOutlet weak var homePageCollectionView: HomePageCollectionView!
-    @IBOutlet weak var horizontalCollectionView: HorizontalContentCollectionView!
+    @IBOutlet weak var horizontalCollectionView: HomePageCollectionView!
     @IBOutlet weak var horizontalCollectionViewHeightConstraint: NSLayoutConstraint!
     
     private let contentDelegationManager = ContentSelectionManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         contentDelegationManager.contentSelectionDelegate(add: menuBarView)
         
@@ -45,28 +44,27 @@ class HomePageController: UIViewController
         let second = ContentModel(contentImageName: "Jake", imageWidth: 1280, imageHeight: 1810, titleText: "Muh-muh-muh Money")
         let third = ContentModel(contentImageName: "Archer", imageWidth: 2448, imageHeight: 3264, titleText: "Danger Zone")
         
-       
-        horizontalDataProvider = CellContentDataProvider(contents: [third,second,first],
-                                                         dataSource: self.horizontalDataSource,
-                                                         delegate: self.horizontalDataSource,
-                                                         layout: UICollectionViewFlowLayout())
-        
         self.fetchJSON {
+            
+            self.horizontalDataProvider = CellContentDataProvider(contents: [third,second,first],
+                                                             dataSource: self.horizontalDataSource,
+                                                             delegate: self.horizontalDataSource,
+                                                             layout: UICollectionViewFlowLayout())
+            
             self.verticalDataSource.contentScrollDelegate = self
             self.verticalDataProvider = CellContentDataProvider(contents: self.contentData,
                                                            dataSource: self.verticalDataSource,
                                                            delegate: self.verticalDataSource,
                                                            layout: UICollectionViewFlowLayout())
             
-            self.dataSource.append(contentsOf: [self.horizontalDataProvider,self.verticalDataProvider])
+            self.homePageCollectionView.setCollectionViewDataProvider(cellDataProvider: self.verticalDataProvider)
             
-            self.homePageCollectionView.dataSource = self.verticalDataProvider.dataSource
-            self.homePageCollectionView.delegate = self.verticalDataProvider.delegate
-            self.horizontalCollectionView.dataSource = self.horizontalDataProvider.dataSource
-            self.horizontalCollectionView.delegate = self.horizontalDataProvider.delegate
+            self.horizontalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.horizontalDataProvider)
             
             self.horizontalDataSource.data = self.horizontalDataProvider
             self.verticalDataSource.data = self.verticalDataProvider
+            
+            self.dataSource.append(contentsOf: [self.horizontalDataProvider,self.verticalDataProvider])
             
             DispatchQueue.main.async {
                 self.homePageCollectionView.reloadData()

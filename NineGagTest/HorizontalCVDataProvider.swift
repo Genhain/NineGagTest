@@ -3,9 +3,9 @@ import Foundation
 import UIKit
 
 
-class HorizontalCVDataProvider: NSObject
+class HorizontalCVDataProvider: CollectionViewDataProvider
 {
-    var data: CellContentDataProvider?
+    
 }
 
 extension HorizontalCVDataProvider: UICollectionViewDataSource, UICollectionViewDelegate

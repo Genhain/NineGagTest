@@ -2,20 +2,17 @@
 import Foundation
 import UIKit
 
-protocol contentScrollDelegate
+class VerticalCVDataProvider: CollectionViewDataProvider
 {
-    func contentViewDidScroll(_ contentView: UIScrollView, contentOffset: CGPoint)
-}
-
-class VerticalCVDataProvider: NSObject
-{
-    var data: CellContentDataProvider?
-    var contentScrollDelegate: contentScrollDelegate?
-    let imageCache: NSCache = NSCache<NSString, UIImage>()
+    
 }
 
 extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDelegate
 {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 3
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return data!.contents.count
     }
