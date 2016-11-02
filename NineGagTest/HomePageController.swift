@@ -10,12 +10,12 @@ import UIKit
 
 let verticalCellId = "verticalCellID"
 let horizontalCellID = "HorizontalContentContainerCell"
-let demoJSONURLString = "https://api.myjson.com/bins/3uaoq"
+let demoJSONURLString = "https://api.myjson.com/bins/333oa" //"https://api.myjson.com/bins/3uaoq"
 
 class HomePageController: UIViewController
 {
     // Collections
-    var contentData: [ContentModel] = []
+    var contentData: [[ContentModel]] = []
     
     let verticalCVDataProvider = VerticalCVDataProvider()
     let horizontalCVDataProvider = HorizontalCVDataProvider()
@@ -45,7 +45,7 @@ class HomePageController: UIViewController
         self.fetchJSON {
             self.verticalCVDataProvider.contentScrollDelegate = self
             
-            self.horizontalCVDataProvider.data = [third,second,first]
+            self.horizontalCVDataProvider.data = [[third,second,first]]
             self.verticalCVDataProvider.data = self.contentData
             
             self.verticalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.verticalCVDataProvider)
@@ -74,9 +74,9 @@ class HomePageController: UIViewController
             }
             
             do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers)
+                let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments,.mutableContainers])
                 
-                self.parseJSON(json: json as! [[String : AnyObject]],completion: completion)
+                self.parseJSON(json: json as! [String :[[String : AnyObject]]],completion: completion)
                 
             } catch let jsonError {
                 print(jsonError)
@@ -85,18 +85,20 @@ class HomePageController: UIViewController
         }.resume()
     }
     
-    private func parseJSON(json: [[String: AnyObject]], completion: () -> Void) {
-        for dictionary in json {
-            
-            let contentURL = dictionary["contentImageName"] as? String
-            let text = dictionary["titleText"] as? String
-            let dimensions = dictionary["dimensions"] as? [String: String]
-            let widthString = dimensions?["width"]
-            let heightString = dimensions?["height"]
-            let content = ContentModel(contentImageName: contentURL!, imageWidth: Int(widthString!)!, imageHeight: Int(heightString!)!, titleText: text!)
-            
-            
-            contentData.append(content)
+    private func parseJSON(json: [String: [[String: Any?]]], completion: () -> Void) {
+        for category in json {
+            var categoryContent: [ContentModel] = []
+            for dictionary in category.value {
+                let contentURL = dictionary["contentImageName"] as? String
+                let text = dictionary["titleText"] as? String
+                let dimensions = dictionary["dimensions"] as? [String: String]
+                let widthString = dimensions?["width"]
+                let heightString = dimensions?["height"]
+                let content = ContentModel(contentImageName: contentURL!, imageWidth: Int(widthString!)!, imageHeight: Int(heightString!)!, titleText: text!)
+                
+                categoryContent.append(content)
+            }
+            contentData.append(categoryContent)
         }
         
         completion()

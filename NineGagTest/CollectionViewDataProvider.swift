@@ -16,7 +16,7 @@ protocol contentScrollDelegate
 
 class CollectionViewDataProvider: NSObject
 {
-    internal var data: [ContentModel]?
+    internal var data: [[ContentModel]]?
     var contentScrollDelegate: contentScrollDelegate?
     internal let imageCache: NSCache = NSCache<NSString, UIImage>()
 }
