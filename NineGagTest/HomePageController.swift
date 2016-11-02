@@ -17,7 +17,7 @@ class HomePageController: UIViewController
     // Collections
     var contentData: [[ContentModel]] = []
     
-    let verticalCVDataProvider = VerticalCVDataProvider()
+    let categoryCVDataProvider = CategoryCVDataProvider()
     let horizontalCVDataProvider = HorizontalCVDataProvider()
     
     @IBOutlet weak var menuBarView: MenuBarView!
@@ -43,19 +43,18 @@ class HomePageController: UIViewController
         let third = ContentModel(contentImageName: "Archer", imageWidth: 2448, imageHeight: 3264, titleText: "Danger Zone")
         
         self.fetchJSON {
-            self.verticalCVDataProvider.contentScrollDelegate = self
+            self.categoryCVDataProvider.contentScrollDelegate = self
             
             self.horizontalCVDataProvider.data = [[third,second,first]]
-            self.verticalCVDataProvider.data = self.contentData
+            self.categoryCVDataProvider.data = self.contentData
             
-            self.verticalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.verticalCVDataProvider)
+            self.verticalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.categoryCVDataProvider)
             self.horizontalCollectionView.setCollectionViewDataProvider(cellDataProvider: self.horizontalCVDataProvider)
             
             DispatchQueue.main.async {
                 self.verticalCollectionView.reloadData()
                 self.horizontalCollectionView.reloadData()
             }
-            
         }
     }
 

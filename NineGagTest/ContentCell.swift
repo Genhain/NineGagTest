@@ -120,7 +120,7 @@ class ContentCell: UICollectionViewCell
     }
     
     
-    func initialiseData(content: ContentModel, imageCache: NSCache<NSString, UIImage>, completion: @escaping () -> Void) {
+    func initialiseContent(_ content: ContentModel, imageCache: NSCache<NSString, UIImage>, completion: @escaping () -> Void) {
         self.contentModel = content
         
         if let contentImageName = self.contentModel?.contentImageName {
