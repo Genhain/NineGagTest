@@ -125,6 +125,7 @@ extension HomePageController: contentScrollDelegate
         }
        
         horizontalCollectionViewHeightConstraint.constant = CGFloat(contentYOffsetDelta)
+        self.verticalCollectionView.collectionViewLayout.invalidateLayout()
     }
 }
 
