@@ -57,7 +57,7 @@ class VerticalCVDataProvider: CollectionViewDataProvider
 extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDelegate
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return data![section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
