@@ -74,7 +74,7 @@ class HomePageController: UIViewController
             }
             
             do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments,.mutableContainers])
+                let json = try JSONSerialization.jsonObject(with: data!, options: [.mutableContainers])
                 
                 self.parseJSON(json: json as! [String :[[String : AnyObject]]],completion: completion)
                 
@@ -86,8 +86,14 @@ class HomePageController: UIViewController
     }
     
     private func parseJSON(json: [String: [[String: Any?]]], completion: () -> Void) {
-        for category in json {
+        
+        let sortedJson = json.sorted { (a: (key: String, value: [[String : Any?]]), b: (key: String, value: [[String : Any?]])) -> Bool in
+            return a.key == "hot" || (a.key == "trending" && b.key != "hot")
+        }
+        
+        for category in sortedJson {
             var categoryContent: [ContentModel] = []
+            
             for dictionary in category.value {
                 let contentURL = dictionary["contentImageName"] as? String
                 let text = dictionary["titleText"] as? String
