@@ -4,8 +4,6 @@ import UIKit
 
 class ContentCell: UICollectionViewCell
 {
-    var contentModel: ContentModel?
-    
     var contentImageView: UIImageView
     
     var titleLabel: UILabel
@@ -120,43 +118,43 @@ class ContentCell: UICollectionViewCell
     }
     
     
-    func initialiseContent(_ content: ContentModel, imageCache: NSCache<NSString, UIImage>, completion: @escaping () -> Void) {
-        self.contentModel = content
-        
-        if let contentImageName = self.contentModel?.contentImageName {
-            
-            if let imageFromCache = imageCache.object(forKey: contentImageName as NSString) {
-                self.contentImageView.image = imageFromCache
-            }
-            else {
-                DispatchQueue.global().async {
-                    
-                    let imageURL = URL(string: contentImageName)
-                    guard let imageData = NSData(contentsOf: imageURL! as URL) else {
-                        return
-                    }
-                    
-                    DispatchQueue.main.async {
-                        let imageToCache = UIImage(data: imageData as Data)
-                        
-                        imageCache.setObject(imageToCache!, forKey: contentImageName as NSString)
-                        
-                        self.contentImageView.image = imageToCache
-                        
-                        self.setNeedsLayout()
-                        
-                        completion()
-                    }
-                    
-                }
-            }
-        }
-        self.contentImageView.contentMode = .scaleAspectFill
-        self.contentImageView.clipsToBounds = true
-        
-        if let titleText = self.contentModel?.titleText {
-            self.titleLabel.text = titleText
-        }
-        self.titleLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 15)
-    }
+//    func initialiseContent(_ content: ContentModel, imageCache: NSCache<NSString, UIImage>, completion: @escaping () -> Void) {
+//        self.contentModel = content
+//        
+//        if let contentImageName = self.contentModel?.contentImageName {
+//            
+//            if let imageFromCache = imageCache.object(forKey: contentImageName as NSString) {
+//                self.contentImageView.image = imageFromCache
+//            }
+//            else {
+//                DispatchQueue.global().async {
+//                    
+//                    let imageURL = URL(string: contentImageName)
+//                    guard let imageData = NSData(contentsOf: imageURL! as URL) else {
+//                        return
+//                    }
+//                    
+//                    DispatchQueue.main.async {
+//                        let imageToCache = UIImage(data: imageData as Data)
+//                        
+//                        imageCache.setObject(imageToCache!, forKey: contentImageName as NSString)
+//                        
+//                        self.contentImageView.image = imageToCache
+//                        
+//                        self.setNeedsLayout()
+//                        
+//                        completion()
+//                    }
+//                    
+//                }
+//            }
+//        }
+//        self.contentImageView.contentMode = .scaleAspectFill
+//        self.contentImageView.clipsToBounds = true
+//        
+//        if let titleText = self.contentModel?.titleText {
+//            self.titleLabel.text = titleText
+//        }
+//        self.titleLabel.font = UIFont(name: "TrebuchetMS-Bold", size: 15)
+//    }
 }

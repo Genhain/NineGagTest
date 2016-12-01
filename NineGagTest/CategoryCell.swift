@@ -17,7 +17,7 @@ class CategoryCell: UICollectionViewCell {
         return cv
     }()
     
-    var collectionViewDataProvider = VerticalCVDataProvider()
+    var collectionViewDataProvider: VerticalCVDataProvider!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -34,14 +34,14 @@ class CategoryCell: UICollectionViewCell {
         collectionView.register(ContentCell.self, forCellWithReuseIdentifier: String(describing: ContentCell.self))
         
         
-        
+        self.collectionViewDataProvider = VerticalCVDataProvider(collectionView: self.collectionView)
         self.collectionView.delegate = self.collectionViewDataProvider
         self.collectionView.dataSource = self.collectionViewDataProvider
     }
     
-    func setDataSource(_ dataSource: [ContentModel]) {
+    func setDataSource(_ dataSource: [Category]) {
         
-        self.collectionViewDataProvider.data = [dataSource]
+        self.collectionViewDataProvider.data = dataSource
     }
     
     func setContentScrollDelegate(_ scrollDelegate: contentScrollDelegate) {
@@ -57,17 +57,13 @@ class VerticalCVDataProvider: CollectionViewDataProvider
 extension VerticalCVDataProvider: UICollectionViewDataSource, UICollectionViewDelegate
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data![section].count
+        return data![section].toPost!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ContentCell.self), for: indexPath) as! ContentCell
         
-         cell.initialiseContent(self.data![indexPath.section][indexPath.item], imageCache: self.imageCache) {
-         collectionView.reloadData()
-         collectionView.invalidateIntrinsicContentSize()
-         collectionView.collectionViewLayout.invalidateLayout()
-         }
+         cell.contentImageView.image = nil
         
         return cell
     }
@@ -82,16 +78,39 @@ extension VerticalCVDataProvider: UICollectionViewDelegateFlowLayout
 {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-         let contentModel = self.data![indexPath.section][indexPath.item]
-         let image = imageCache.object(forKey: contentModel.contentImageName as NSString)
+        let posts = self.data![indexPath.section].toPost!.allObjects
+        let sortedPosts = posts.sorted { (A, B) -> Bool in
+            
+            if let postACreationDate = (A as! Post).created {
+                if let postBCreationDate = (B as! Post).created {
+                    
+                    switch postACreationDate.compare(postBCreationDate as Date) {
+                    case .orderedAscending:
+                        return true
+                    case .orderedDescending:
+                        return false
+                    case.orderedSame:
+                        return false
+                    }
+                }
+            }
+            
+            return false
+        }
+        
+        let post = sortedPosts[indexPath.item] as! Post
+        
+        let image = post.toImage?.image as? UIImage
+            
+//        imageCache.object(forKey: post. .contentImageName as NSString)
+        
+        if image == nil {
+            return CGSize(width: collectionView.frame.width, height: 400)
+        }
          
-         if image == nil {
-         return CGSize(width: collectionView.frame.width, height: 400)
-         }
+        let aspectHeight = ((image?.size.height)! / (image?.size.width)!) * collectionView.frame.width
          
-         let aspectHeight = ((image?.size.height)! / (image?.size.width)!) * collectionView.frame.width
-         
-         return CGSize(width: collectionView.frame.width, height: aspectHeight)
+        return CGSize(width: collectionView.frame.width, height: aspectHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

@@ -12,11 +12,17 @@ import UIKit
 protocol contentScrollDelegate
 {
     func contentViewDidScroll(_ contentView: UIScrollView, contentOffset: CGPoint)
+    func contentDidEndDecelerating(_ contentView: UIScrollView)
 }
 
 class CollectionViewDataProvider: NSObject
 {
-    internal var data: [[ContentModel]]?
+    internal var data: [Category]?
     var contentScrollDelegate: contentScrollDelegate?
     internal let imageCache: NSCache = NSCache<NSString, UIImage>()
+    internal var collectionView:UICollectionView!
+    
+    init(collectionView: UICollectionView) {
+        self.collectionView = collectionView
+    }
 }

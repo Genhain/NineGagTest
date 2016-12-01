@@ -35,7 +35,7 @@ class NineGagTestTests: XCTestCase {
     
     func test_ScrollView_notNil()
     {
-        XCTAssertNotNil(viewController.homePageCollectionView);
+        
     } 
     
     func test_CategoryHeaderView_notNil()

@@ -13,7 +13,7 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let coreDataStack = CoreDataStack()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -41,24 +41,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-        self.saveContext()
+        coreDataStack.saveContext()
     }
+}
 
-    // MARK: - Core Data stack
+typealias DataTaskResult = (Data?, URLResponse?, Error?) -> Swift.Void
 
+protocol URLSessionDataTaskProtocol {
+    func resume()
+}
+
+protocol URLSessionProtocol {
+    func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol
+}
+
+extension URLSession: URLSessionProtocol {
+    func dataTask(with url: URL, completionHandler: @escaping DataTaskResult) -> URLSessionDataTaskProtocol {
+        return (dataTask(with: url, completionHandler: completionHandler) as URLSessionDataTask) as URLSessionDataTaskProtocol
+    }
+}
+extension URLSessionDataTask: URLSessionDataTaskProtocol {}
+
+private let ad = UIApplication.shared.delegate as! AppDelegate
+let coreDataStack = ad.coreDataStack
+
+class CoreDataStack: NSObject
+{
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
          creates and returns a container, having loaded the store for the
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
-        */
+         */
         let container = NSPersistentContainer(name: "NineGagTest")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                 
+                
                 /*
                  Typical reasons for an error here include:
                  * The parent directory does not exist, cannot be created, or disallows writing.
@@ -72,9 +93,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         return container
     }()
-
+    
     // MARK: - Core Data Saving support
-
+    
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -88,6 +109,74 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+    static func deserialise( JSON: Any?, inContext context: NSManagedObjectContext, sortById: ComparisonResult = .orderedSame, urlSession: URLSessionProtocol = URLSession.shared) -> [Category]
+    {
+        var categoriesToReturn: [Category] = []
+        
+        let jsonToBeParsed = JSON as? [String: AnyObject]
+        
+        for unparsedCategories in jsonToBeParsed! {
+            
+            let category = Category(context: context)
+            
+            category.title = unparsedCategories.key
+            
+            let jsonObj = JSONObject(collection: jsonToBeParsed!)
+            
+            do {
+                try category.fromJSON(jsonObj, context: context)
+            } catch let JSONError.NoValueForKey(key) {
+                print("Didn't find value for key: \(key)")
+            }
+            catch {
+                print("Wrong type")
+            }
+            
+            categoriesToReturn.append(category)
+        }
+        
+        for category in categoriesToReturn {
+            for post in category.toPost!.allObjects as! [Post] {
+                
+                guard let image = post.toImage else { continue }
+                guard let imageURLString = image.url else { continue }
+                guard let imageURL = URL(string: imageURLString) else { continue }
+                
+                urlSession.dataTask(with: imageURL, completionHandler: { (data, urlResponse, error) in
+                    
+                    if let imageData = data, let imageFromData = UIImage(data: imageData) {
+                        image.image = imageFromData
+                    }
+                    
+                }).resume()
+            }
 
+        }
+        
+        if sortById != .orderedSame {
+            categoriesToReturn.sort { (categoryA, categoryB) -> Bool in
+                
+                guard let categoryAIdentifier = categoryA.id,
+                    let categoryAIDNumber = Int(categoryAIdentifier) else {return false}
+                
+                guard let categoryBIdentifier = categoryB.id,
+                    let categoryBIDNumber = Int(categoryBIdentifier) else {return false}
+                
+                switch sortById {
+                case .orderedAscending:
+                    return categoryAIDNumber < categoryBIDNumber
+                    
+                case .orderedDescending:
+                    return categoryAIDNumber > categoryBIDNumber
+                    
+                default:
+                    return true
+                }
+            }
+        }
+        
+        return categoriesToReturn
+    }
 }
 

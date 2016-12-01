@@ -10,7 +10,7 @@ import XCTest
 @testable import NineGagTest
 
 
-class ContentSelectionDelegateFake: NSObject, ContenSelectedDelegate
+class ContentSelectionDelegateFake: NSObject, ContentSelectedDelegate
 {
     var wasSelectContentCalled = false
     var variablePassedIn : Int = 0

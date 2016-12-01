@@ -8,20 +8,20 @@
 
 import Foundation
 
-@objc protocol ContenSelectedDelegate: NSObjectProtocol
+@objc protocol ContentSelectedDelegate: NSObjectProtocol
 {
     func selectContent(forIndex: Int)
 }
 
 class ContentSelectionManager
 {
-    private var contentSelectionDelegates: [ContenSelectedDelegate] = []
+    private var contentSelectionDelegates: [ContentSelectedDelegate] = []
     
-    func contentSelectionDelegate(add contentSelectionDelegate: ContenSelectedDelegate) {
+    func contentSelectionDelegate(add contentSelectionDelegate: ContentSelectedDelegate) {
         contentSelectionDelegates.append(contentSelectionDelegate)
     }
     
-    func contentSelectionDelegate(remove contentSelectionDelegate: ContenSelectedDelegate) {
+    func contentSelectionDelegate(remove contentSelectionDelegate: ContentSelectedDelegate) {
     contentSelectionDelegates = contentSelectionDelegates.filter {!$0.isEqual(contentSelectionDelegate)}
     }
 

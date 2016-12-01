@@ -215,7 +215,7 @@ class MenuBarViewTests: XCTestCase {
     func testClass_ConformsToContentSelectionDelegate()
     {
         // Assert
-        XCTAssertTrue(SUT.conforms(to: ContenSelectedDelegate.self))
+        XCTAssertTrue(SUT.conforms(to: ContentSelectedDelegate.self))
     }
     
     func testItemForIndex_1ItemAt0_IsItemAt0()

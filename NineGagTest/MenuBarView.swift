@@ -4,10 +4,10 @@ import Foundation
 import UIKit
 import Dispatch
 
-class MenuBarView: UIView, ContenSelectedDelegate
+class MenuBarView: UIView, ContentSelectedDelegate
 {
-    private let collectionView : UICollectionView
-    var menuBarItems : [MenuBarItem] = []
+    let collectionView : UICollectionView
+    fileprivate var menuBarItems : [MenuBarItem] = []
     let cellId = "menuBarCell"
     
     
@@ -57,21 +57,60 @@ class MenuBarView: UIView, ContenSelectedDelegate
             horizontalBarLeftAnchorConstraint!,
             horizontalSelectionBarView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             horizontalSelectionBarView.heightAnchor.constraint(equalToConstant: 8),
-            horizontalSelectionBarView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier:1/3)
+            horizontalSelectionBarView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier:CGFloat(1/max(1, itemCount())))
         ])
+    }
+    
+    var contentSelectionManager: ContentSelectionManager!
+    func setContentDelegationManager(_ contentSelectionManager: ContentSelectionManager) {
+        self.contentSelectionManager = contentSelectionManager
     }
     
     //MARK: Functionality
     public func addItem(menuBarItem: MenuBarItem) {
         menuBarItems.append(menuBarItem)
         
+        self.collectionView.collectionViewLayout.invalidateLayout()
+        self.collectionView.reloadData()
+        
         // Auto Select First item
         if self.menuBarItems.count == 1 {
-            self.collectionView.reloadData()
-            DispatchQueue.main.async{
-                self.collectionView(self.collectionView, didSelectItemAt: NSIndexPath(item: 0, section: 0) as IndexPath)
-            }
+            self.selectDefaultItem()
         }
+        
+    }
+    
+    public func addItems(newMenuBarItems: [MenuBarItem]) {
+        
+        var isAddingToEmpty = false
+        if self.itemCount() == 0 {
+            isAddingToEmpty = true
+        }
+        
+        menuBarItems.append(contentsOf: newMenuBarItems)
+        
+        self.collectionView.collectionViewLayout.invalidateLayout()
+        self.collectionView.reloadData()
+        
+        if isAddingToEmpty {
+            self.selectDefaultItem()
+        }
+    }
+    
+    private func selectDefaultItem() {
+        
+        DispatchQueue.main.async{
+            self.collectionView(self.collectionView,
+                                didSelectItemAt: IndexPath(item: 0, section: 0))
+        }
+    }
+    
+    public func removeItem(itemIndex: Int) {
+        menuBarItems.remove(at: itemIndex)
+    }
+    
+    public func removeAllItems() {
+        menuBarItems.removeAll()
     }
     
     public func itemCount() -> Int {
@@ -85,7 +124,14 @@ class MenuBarView: UIView, ContenSelectedDelegate
     //MARK: ContenSelectedDelegate
     func selectContent(forIndex: Int) {
         
+        for menuItem in self.menuBarItems {
+            menuItem.deselected()
+        }
+        let menuItem = self.menuBarItems[forIndex]
+        
+        menuItem.selected()
     }
+    
 }
 
 extension MenuBarView: UICollectionViewDataSource
@@ -97,6 +143,8 @@ extension MenuBarView: UICollectionViewDataSource
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MenuItemCell
         
+        cell.clear()
+        
         cell.setup(menuItem: self.menuBarItems[indexPath.item])
         
         return cell
@@ -106,25 +154,7 @@ extension MenuBarView: UICollectionViewDataSource
 extension MenuBarView: UICollectionViewDelegate
 {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        for menuItem in self.menuBarItems {
-            menuItem.deselected()
-        }
-        let menuItem = self.menuBarItems[indexPath.item]
-        
-        let x = CGFloat(indexPath.item) * frame.width / 3
-        horizontalBarLeftAnchorConstraint?.constant = x
-        
-        UIView.animate(withDuration: 0.45,
-                       delay: 0,
-                       usingSpringWithDamping: 1,
-                       initialSpringVelocity: 1,
-                       options: .curveEaseInOut,
-                       animations: {
-            self.layoutIfNeeded()
-            }, completion: nil)
-        
-        menuItem.selected()
+        contentSelectionManager.contentSelected(atIndex: indexPath.item)
     }
 }
 
@@ -141,7 +171,28 @@ extension MenuBarView: UICollectionViewDelegateFlowLayout
 
 class MenuItemCell: UICollectionViewCell
 {
-    public func setup(menuItem: MenuBarItem) {        
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.contentView.autoresizingMask.insert(.flexibleWidth)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func clear() {
+        
+    }
+    
+    override func prepareForReuse() {
+        for subview in self.contentView.subviews {
+            subview.removeFromSuperview()
+        }
+    }
+    
+    public func setup(menuItem: MenuBarItem) {
+    
         self.contentView.addSubview(menuItem.iconView)
         menuItem.setupIconView(parentView: self.contentView)
     }

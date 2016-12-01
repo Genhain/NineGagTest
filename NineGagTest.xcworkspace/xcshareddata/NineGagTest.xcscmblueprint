@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "17CCAD05EF9165119330603B828181C409733EB6",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "0C3A8FF02687598F736DCB701D75811FD1EA9CCA" : 9223372036854775807,
+    "17CCAD05EF9165119330603B828181C409733EB6" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "DB9E74DF-F76F-433E-BAEB-8BFC488A858C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "0C3A8FF02687598F736DCB701D75811FD1EA9CCA" : "NineGagTest\/XCTestCase-Extensions\/",
+    "17CCAD05EF9165119330603B828181C409733EB6" : "NineGagTest\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "NineGagTest",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "NineGagTest.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Genhain\/XCTestCase-Extensions.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0C3A8FF02687598F736DCB701D75811FD1EA9CCA"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Genhain\/NineGagTest.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "17CCAD05EF9165119330603B828181C409733EB6"
+    }
+  ]
+}
