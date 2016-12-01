@@ -117,7 +117,7 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(spy.posts?[1]["id"] as! String, "4")
     }
     
-    func testJSONValue_array5Count_ShouldEqualData()
+    func testEnumerateObjects_array5Count_ShouldEqualData()
     {
         // Arrange
         let data =
@@ -143,7 +143,7 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(5, index)
     }
     
-    func testJSONValue_array8Count_ShouldEqualData()
+    func testEnumerateObjects_array8Count_ShouldEqualData()
     {
         // Arrange
         let data =
@@ -172,7 +172,7 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(8, index)
     }
     
-    func testJSONValue_array3Dictionaries_ShouldEqualData()
+    func testEnumerateObjects_array3Dictionaries_ShouldEqualData()
     {
         // Arrange
         let data =
@@ -197,7 +197,7 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(3, index)
     }
     
-    func testJSONValue_dictionary3Count_ShouldEqualData()
+    func testEnumerateObjects_dictionary3Count_ShouldEqualData()
     {
         // Arrange
         let data =
@@ -220,7 +220,7 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(3, index)
     }
     
-    func testJSONValue_arrayInDictionary3CountIntoDictionary_ShouldEqualData()
+    func testEnumerateObjects_arrayInDictionary3CountIntoDictionary_ShouldEqualData()
     {
         // Arrange
         let data =
@@ -241,7 +241,7 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(3, index)
     }
     
-    func testJSONValue_array4CountInDictionary_ShouldEqualData()
+    func testEnumerateObjects_array4CountInDictionary_ShouldEqualData()
     {
         // Arrange
         let data =
@@ -262,7 +262,7 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(4, index)
     }
     
-    func testJSONValue_nestedExample_ShouldEqualData()
+    func testEnumerateObjects_nestedExample_ShouldEqualData()
     {
         // Arrange
         let data =
@@ -272,13 +272,15 @@ class JSONObjectTests: XCTestCase {
             "tres": ["three": ["8": 8, "9": 9]]
         ] as [String : Any]
         
-        // Act
+        
         let SUT = JSONObject(collection: data)
         
-        // Assert
+        
+        // Act
         var index = 0
         SUT.enumerateObjects(atKeyPath: "a") { (keyIndex, element) in
             let array = data["a"] as? [String]
+            // Assert
             XCTAssertEqual(array?[index], String(describing: element) )
             index += 1
         }
@@ -288,6 +290,7 @@ class JSONObjectTests: XCTestCase {
         index = 0
         SUT.enumerateObjects(atKeyPath: "two") { (keyIndex, element) in
             let array = data["two"] as? [Int]
+            // Assert
             XCTAssertEqual(array?[index], element as? Int)
             index += 1
         }
@@ -298,10 +301,35 @@ class JSONObjectTests: XCTestCase {
         SUT.enumerateObjects(atKeyPath: "tres.three") { (keyIndex, element) in
             guard let dict = data["tres"] as? [String: Any] else { XCTFail(); return }
             guard let innerDict = dict["three"] as? [String: Int] else { XCTFail(); return }
+            // Assert
             XCTAssertEqual(innerDict[keyIndex], element as? Int)
             index += 1
         }
         
         XCTAssertEqual(2, index)
     }
+    
+//    func testEnumerateJSONConvertible_PostObject_isStuff()
+//    {
+//        // Arrange
+//        let data =
+//        [
+//            "category":
+//                ["id": "1",
+//                 "posts":[
+//                    ["titleText": "test1",
+//                     "id": "1"],
+//                    ["titleText": "test2",
+//                     "id": "2"]]]
+//        ]
+//        
+//        let SUT = JSONObject(collection: data)
+//    
+//        // Act
+//        SUT.enumerateObjects(ofType: Post.self, forKeyPath: "category.posts") { (keyIndex, element) in
+//            
+//        }
+//        
+//        // Assert
+//    }
 }

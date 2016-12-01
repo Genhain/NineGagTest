@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0807A3721DEDD97B00AC9FB1 /* JSONObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807A3711DEDD97B00AC9FB1 /* JSONObjectTests.swift */; };
+		0807A3741DF063D500AC9FB1 /* URL+Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807A3731DF063D500AC9FB1 /* URL+Testing.swift */; };
+		0807A3761DF063EA00AC9FB1 /* UIImage+Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807A3751DF063EA00AC9FB1 /* UIImage+Testing.swift */; };
 		081AB0901DDC233A00132690 /* CategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081AB08F1DDC233A00132690 /* CategoryTests.swift */; };
 		081AB0921DDC3EFC00132690 /* Post+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081AB0911DDC3EFC00132690 /* Post+CoreDataProperties.swift */; };
 		081AB0961DDEDCBA00132690 /* Post+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081AB0951DDEDCBA00132690 /* Post+CoreDataClass.swift */; };
@@ -16,8 +18,6 @@
 		081AB0A61DE1526100132690 /* XCTestCase+Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 081AB09F1DE1526100132690 /* XCTestCase+Swizzle.m */; };
 		081AB0A71DE1526100132690 /* XCTestCase+UIImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 081AB0A11DE1526100132690 /* XCTestCase+UIImage.m */; };
 		081AB0A81DE1526100132690 /* XCTestCase+WaitExpectation.m in Sources */ = {isa = PBXBuildFile; fileRef = 081AB0A31DE1526100132690 /* XCTestCase+WaitExpectation.m */; };
-		081AB0AD1DE2E54400132690 /* UIImage+Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081AB0AC1DE2E54400132690 /* UIImage+Testing.swift */; };
-		081AB0AF1DE2FE3800132690 /* URL+Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081AB0AE1DE2FE3800132690 /* URL+Testing.swift */; };
 		082150061DEAEFB50077E278 /* JSONObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082150051DEAEFB50077E278 /* JSONObject.swift */; };
 		082EBC7B1DC4B01C00F42F1B /* ContentSelectionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082EBC7A1DC4B01C00F42F1B /* ContentSelectionManagerTests.swift */; };
 		08534CE11DD1B4DE00B7DDE8 /* Image+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08534CDD1DD1B4DE00B7DDE8 /* Image+CoreDataClass.swift */; };
@@ -67,6 +67,8 @@
 
 /* Begin PBXFileReference section */
 		0807A3711DEDD97B00AC9FB1 /* JSONObjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONObjectTests.swift; sourceTree = "<group>"; };
+		0807A3731DF063D500AC9FB1 /* URL+Testing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Testing.swift"; sourceTree = "<group>"; };
+		0807A3751DF063EA00AC9FB1 /* UIImage+Testing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Testing.swift"; sourceTree = "<group>"; };
 		081AB08F1DDC233A00132690 /* CategoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryTests.swift; sourceTree = "<group>"; };
 		081AB0911DDC3EFC00132690 /* Post+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Post+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		081AB0951DDEDCBA00132690 /* Post+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Post+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -81,8 +83,6 @@
 		081AB0A21DE1526100132690 /* XCTestCase+WaitExpectation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+WaitExpectation.h"; sourceTree = "<group>"; };
 		081AB0A31DE1526100132690 /* XCTestCase+WaitExpectation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+WaitExpectation.m"; sourceTree = "<group>"; };
 		081AB0A91DE1543700132690 /* NineGagTestTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NineGagTestTests-Bridging-Header.h"; path = "NineGagTestTests/NineGagTestTests-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		081AB0AC1DE2E54400132690 /* UIImage+Testing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Testing.swift"; sourceTree = "<group>"; };
-		081AB0AE1DE2FE3800132690 /* URL+Testing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Testing.swift"; sourceTree = "<group>"; };
 		082150051DEAEFB50077E278 /* JSONObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONObject.swift; sourceTree = "<group>"; };
 		082EBC7A1DC4B01C00F42F1B /* ContentSelectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentSelectionManagerTests.swift; sourceTree = "<group>"; };
 		08534CDD1DD1B4DE00B7DDE8 /* Image+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Image+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -167,8 +167,8 @@
 				081AB0A21DE1526100132690 /* XCTestCase+WaitExpectation.h */,
 				081AB0A31DE1526100132690 /* XCTestCase+WaitExpectation.m */,
 				081AB0A91DE1543700132690 /* NineGagTestTests-Bridging-Header.h */,
-				081AB0AC1DE2E54400132690 /* UIImage+Testing.swift */,
-				081AB0AE1DE2FE3800132690 /* URL+Testing.swift */,
+				0807A3731DF063D500AC9FB1 /* URL+Testing.swift */,
+				0807A3751DF063EA00AC9FB1 /* UIImage+Testing.swift */,
 			);
 			path = "XCTestCase-Extensions";
 			sourceTree = "<group>";
@@ -640,17 +640,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0807A3761DF063EA00AC9FB1 /* UIImage+Testing.swift in Sources */,
 				081AB0A51DE1526100132690 /* XCTestCase+ALAsset.m in Sources */,
 				082EBC7B1DC4B01C00F42F1B /* ContentSelectionManagerTests.swift in Sources */,
 				081AB0A71DE1526100132690 /* XCTestCase+UIImage.m in Sources */,
-				081AB0AF1DE2FE3800132690 /* URL+Testing.swift in Sources */,
 				08AFCDF51DC1EBCE00D42DA7 /* MainVCTests.swift in Sources */,
+				0807A3741DF063D500AC9FB1 /* URL+Testing.swift in Sources */,
 				081AB0A81DE1526100132690 /* XCTestCase+WaitExpectation.m in Sources */,
 				081AB0A41DE1526100132690 /* UIGestureRecognizer+ActionTarget.m in Sources */,
 				08AFCE5B1DC3CB6B00D42DA7 /* MenuBarViewTests.swift in Sources */,
 				0807A3721DEDD97B00AC9FB1 /* JSONObjectTests.swift in Sources */,
 				081AB0A61DE1526100132690 /* XCTestCase+Swizzle.m in Sources */,
-				081AB0AD1DE2E54400132690 /* UIImage+Testing.swift in Sources */,
 				081AB0901DDC233A00132690 /* CategoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

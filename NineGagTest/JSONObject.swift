@@ -83,6 +83,10 @@ class JSONObject
             }
         }
     }
+    
+    func enumerateObject(ofType type: JSONAble, forKeyPath keyPath: String, enumerationsClosure: (_ indexKey: String, _ element: AnyObject) -> Void) {
+        
+    }
 
     private func iterate<T: Any>(collection: T, forKey key: String) -> Any where T: Collection {
         
