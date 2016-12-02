@@ -18,10 +18,11 @@ enum JSONError : Error {
 }
 
 protocol JSONAble {
+    static func initJSONAble(context: NSManagedObjectContext) -> Self
     func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String) throws
 }
 
-class JSONObject
+final class JSONObject
 {
     private var array: [Any]?
     private var dictionary: [String: Any]?
@@ -51,23 +52,92 @@ class JSONObject
         
         throw JSONError.TypeMismatch
     }
+
+    private func valueAtPath(_ keyPath: String) throws -> Any
+    {
+        let pathComponents = keyPath.components(separatedBy:".")
     
-    func countForRelationship(_ key: String) -> Int {
+        var valueAtPath: Any?
         
-        let valueAtPath = try? self.valueAtPath(key)
-        
-        if let value = valueAtPath as? Dictionary<String, Any> {
-            return Int(value.count)
-        }
-        else if let value = valueAtPath as? Array<Any> {
-            return Int(value.count)
+        if let array = self.array {
+            valueAtPath = array
         }
         
-        return 0
+        if let dictionary = self.dictionary {
+            valueAtPath = dictionary
+        }
         
-       
+        var arrayOfIndices: [Int] = []
+        
+        for component in pathComponents {
+            
+            var charset = CharacterSet()
+            charset.insert("[")
+            charset.insert("]")
+            let innerComponents = component.components(separatedBy: charset)
+            
+            if innerComponents.count > 1, innerComponents.count < 3 { throw JSONError.InvalidString }
+            
+            let key = innerComponents.first
+            
+            if innerComponents.count > 1 {
+                for innerComponent in innerComponents {
+                    if let index = Int(innerComponent) {
+                        arrayOfIndices.append(index)
+                    }
+                }
+            }
+        
+            if let dict = valueAtPath as? [String:AnyObject] {
+                if let value = dict[key!] {
+                    valueAtPath = value
+                }
+            }
+            
+            if let array = valueAtPath as? [AnyObject] {
+                
+                if !arrayOfIndices.isEmpty {
+                    
+                    func nestedValue(inArray jsonArray: [AnyObject], forIndices indices: inout [Int]) -> AnyObject {
+                        
+                        var value = jsonArray[indices.removeFirst()]
+                        
+                        if let newArray = value as? [AnyObject],
+                            !indices.isEmpty {
+                            value = nestedValue(inArray: newArray, forIndices: &indices)
+                        }
+                        
+                        return value
+                    }
+                    
+                    valueAtPath = nestedValue(inArray: array, forIndices: &arrayOfIndices)
+                }
+                else {
+                    valueAtPath = array
+                }
+            }
+        }
+        
+        return valueAtPath!
     }
     
+    
+    
+    func objectForKey(_ key: String) throws -> JSONObject {
+        
+        var retVal: JSONObject?
+        
+        if let dict: [String: AnyObject] = try? valueForKey(key) {
+            retVal = JSONObject(collection: dict)
+        }
+        
+        if let array: [AnyObject] = try? valueForKey(key) {
+            retVal = JSONObject(collection: array)
+        }
+        
+        return retVal!
+    }
+   
     func enumerateObjects(atKeyPath keypath: String, enumerationClosure: ( _ indexKey: String, _ element: AnyObject) -> Void)  {
         
         let value = try? self.valueAtPath(keypath)
@@ -84,97 +154,28 @@ class JSONObject
         }
     }
     
-    func enumerateObject(ofType type: JSONAble, forKeyPath keyPath: String, enumerationsClosure: (_ indexKey: String, _ element: AnyObject) -> Void) {
+    func enumerateObjects(ofType type: JSONAble.Type, context: NSManagedObjectContext, forKeyPath keyPath: String, enumerationsClosure: (_ indexKey: String, _ element: JSONAble) -> Void) {
         
-    }
-
-    private func iterate<T: Any>(collection: T, forKey key: String) -> Any where T: Collection {
-        
-        var retVal: Any?
-        
-        for(_,element) in collection.enumerated() {
-            retVal = element
+        for index in 0...self.countForRelationship(keyPath) - 1 {
+            let a = type.initJSONAble(context: context)
+            try? a.fromJSON(self, context: context, keyPath: "\(keyPath)[\(index)]")
             
-            if let dictionaryEntry = element as? Dictionary<String, Any>.Element {
-                if key == dictionaryEntry.key {
-                    retVal = dictionaryEntry.value
-                }
-            }
-            else {
-                retVal = element
-            }
-            
+            enumerationsClosure("", a)
         }
-        
-        return retVal!
-    }
-
-    private func valueAtPath(_ keyPath: String) throws -> Any
-    {
-        let pathComponents = keyPath.components(separatedBy:".")
-    
-        var valueAtPath: Any?
-        
-        if let array = self.array {
-            valueAtPath = array
-        }
-        
-        if let dictionary = self.dictionary {
-            valueAtPath = dictionary
-        }
-        
-        for component in pathComponents {
-            
-            var charset = CharacterSet()
-            charset.insert("[")
-            charset.insert("]")
-            let innerComponents = component.components(separatedBy: charset)
-            
-            if innerComponents.count > 1, innerComponents.count < 3 { throw JSONError.InvalidString }
-            
-            let key = innerComponents.first
-            
-            if let array = valueAtPath as? [AnyObject] {
-                if innerComponents.count > 1 {
-                    guard let index = Int(innerComponents[1]),
-                        innerComponents.count > index
-                           else {
-                        throw JSONError.IndexOutOfRange
-                    }
-                    
-                    valueAtPath = array[index]
-                }
-                else {
-                    valueAtPath = array
-                }
-                
-                continue
-            }
-            
-            
-            if let dict = valueAtPath as? [String:AnyObject] {
-                if let value = dict[key!] {
-                    valueAtPath = value
-                    continue
-                }
-            }
-        }
-        
-        return valueAtPath!
     }
     
-    func objectForKey(_ key: String) throws -> JSONObject {
+    private func countForRelationship(_ key: String) -> Int {
         
-        var retVal: JSONObject?
+        let valueAtPath = try? self.valueAtPath(key)
         
-        if let dict: [String: AnyObject] = try? valueForKey(key) {
-            retVal = JSONObject(collection: dict)
+        if let value = valueAtPath as? Dictionary<String, Any> {
+            return Int(value.count)
+        }
+        else if let value = valueAtPath as? Array<Any> {
+            return Int(value.count)
         }
         
-        if let array: [AnyObject] = try? valueForKey(key) {
-            retVal = JSONObject(collection: array)
-        }
-        
-        return retVal!
+        return 0
     }
+    
 }

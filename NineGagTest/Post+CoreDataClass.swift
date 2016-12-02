@@ -10,8 +10,9 @@ import Foundation
 import CoreData
 
 
-public class Post: NSManagedObject, JSONAble {
+final public class Post: NSManagedObject, JSONAble {
     
+
     public override func awakeFromInsert() {
         
         super.awakeFromInsert()
@@ -19,6 +20,11 @@ public class Post: NSManagedObject, JSONAble {
         self.created = NSDate()
     
     }
+    
+    static func initJSONAble(context: NSManagedObjectContext) -> Post {
+        return Post(context: context)
+    }
+
 
     func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "") throws {
         

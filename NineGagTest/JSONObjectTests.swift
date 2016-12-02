@@ -38,10 +38,14 @@ class JSONObjectTests: XCTestCase {
                      "id": "2"]]]
         ]
         
-        class JSONAbleTester: JSONAble
+        final class JSONAbleTester: JSONAble
         {
             private(set) var id: String?
             private(set) var posts: [[String: AnyObject]]?
+            
+            fileprivate static func initJSONAble(context: NSManagedObjectContext) -> JSONAbleTester {
+                return JSONAbleTester()
+            }
             
             func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "[0]") throws {
                 self.id = try JSONObject.valueForKey("\(keyPath).id")
@@ -83,11 +87,14 @@ class JSONObjectTests: XCTestCase {
                      "id": "4"]]]
         ]
         
-        class JSONAbleTester: JSONAble
+        final class JSONAbleTester: JSONAble
         {
             private(set) var id: String?
             private(set) var posts: [[String: AnyObject]]?
             
+            fileprivate static func initJSONAble(context: NSManagedObjectContext) -> JSONAbleTester {
+                return JSONAbleTester()
+            }
             func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "") throws {
                 self.id = try JSONObject.valueForKey("\(keyPath).id")
                 self.posts = try JSONObject.valueForKey("\(keyPath).posts")
@@ -309,27 +316,299 @@ class JSONObjectTests: XCTestCase {
         XCTAssertEqual(2, index)
     }
     
-//    func testEnumerateJSONConvertible_PostObject_isStuff()
-//    {
-//        // Arrange
-//        let data =
-//        [
-//            "category":
-//                ["id": "1",
-//                 "posts":[
-//                    ["titleText": "test1",
-//                     "id": "1"],
-//                    ["titleText": "test2",
-//                     "id": "2"]]]
-//        ]
-//        
-//        let SUT = JSONObject(collection: data)
-//    
-//        // Act
-//        SUT.enumerateObjects(ofType: Post.self, forKeyPath: "category.posts") { (keyIndex, element) in
-//            
-//        }
-//        
-//        // Assert
-//    }
+    func testValueForKey_getFirstPostOfcategoryTitle_isEqualToData()
+    {
+        // Arrange
+        let data =
+        [
+            "category":
+                ["id": "1",
+                 "posts":[
+                    ["titleText": "test1",
+                     "id": "1"]]]
+        ]
+
+        let SUT = JSONObject(collection: data)
+
+        // Act
+        let title: String = try! SUT.valueForKey("category.posts[0].titleText")
+        let id: String = try! SUT.valueForKey("category.posts[0].id")
+        
+        XCTAssertNotNil(title)
+        XCTAssertEqual("test1", title)
+        XCTAssertEqual("1", id)
+    }
+    
+    func testValueForKey_getSecondPostOfcategoryTitle_isEqualToData()
+    {
+        // Arrange
+        let data =
+            [
+                "category":
+                    ["id": "1",
+                     "posts":[
+                        ["titleText": "test3",
+                         "id": "3"],
+                        ["titleText": "test4",
+                         "id": "4"]]]
+        ]
+        
+        let SUT = JSONObject(collection: data)
+        
+        // Act
+        var title: String = try! SUT.valueForKey("category.posts[0].titleText")
+        var id: String = try! SUT.valueForKey("category.posts[0].id")
+        
+        XCTAssertNotNil(title)
+        XCTAssertEqual("test3", title)
+        XCTAssertEqual("3", id)
+        
+        title = try! SUT.valueForKey("category.posts[1].titleText")
+        id = try! SUT.valueForKey("category.posts[1].id")
+        
+        XCTAssertNotNil(title)
+        XCTAssertEqual("test4", title)
+        XCTAssertEqual("4", id)
+    }
+    
+    func testValueForKey_getNestedArrayValues_isEqualToData()
+    {
+        // Arrange
+        let data =
+        [
+            "category":
+                ["id": "1",
+                 "posts":
+                  [["t","e","s","t","1"]]
+                ]
+        ]
+        
+        let SUT = JSONObject(collection: data)
+        
+        // Act
+        var testString: String = try! SUT.valueForKey("category.posts[0][0]")
+        testString.append(try! SUT.valueForKey("category.posts[0][1]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][2]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][3]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][4]") as String)
+        
+        XCTAssertEqual("test1", testString)
+    }
+    
+    func testValueForKey_get2NestedArrayValues_isEqualToData()
+    {
+        // Arrange
+        let data =
+            [
+                "category":
+                    ["id": "1",
+                     "posts":
+                        [["t","e","s","t","1"],
+                        ["v","a","l","u","e"]]
+                ]
+        ]
+        
+        let SUT = JSONObject(collection: data)
+        
+        // Act
+        var testString: String = try! SUT.valueForKey("category.posts[0][0]")
+        testString.append(try! SUT.valueForKey("category.posts[0][1]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][2]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][3]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][4]") as String)
+        
+        XCTAssertEqual("test1", testString)
+        
+        testString = try! SUT.valueForKey("category.posts[1][0]")
+        testString.append(try! SUT.valueForKey("category.posts[1][1]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[1][2]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[1][3]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[1][4]") as String)
+        
+        XCTAssertEqual("value", testString)
+    }
+    
+    func testValueForKey_get3Values2Arrays1DictionaryWithArrays_isEqualToData()
+    {
+        // Arrange
+        let data =
+            [
+                "category":
+                    ["id": "1",
+                     "posts":
+                        [
+                            ["t","e","s","t","1"],
+                            ["v","a","l","u","e"],
+                            ["id":[["k","y","l","e"],["c","r","a","n","e"]]]
+                        ]
+                ]
+        ]
+        
+        let SUT = JSONObject(collection: data)
+        
+        // Act
+        var testString: String = try! SUT.valueForKey("category.posts[0][0]")
+        testString.append(try! SUT.valueForKey("category.posts[0][1]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][2]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][3]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[0][4]") as String)
+        
+        XCTAssertEqual("test1", testString)
+        
+        testString = try! SUT.valueForKey("category.posts[1][0]")
+        testString.append(try! SUT.valueForKey("category.posts[1][1]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[1][2]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[1][3]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[1][4]") as String)
+        
+        XCTAssertEqual("value", testString)
+        
+        testString = try! SUT.valueForKey("category.posts[2].id[0][0]")
+        testString.append(try! SUT.valueForKey("category.posts[2].id[0][1]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[2].id[0][2]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[2].id[0][3]") as String)
+        testString.append(" ")
+        testString.append(try! SUT.valueForKey("category.posts[2].id[1][0]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[2].id[1][1]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[2].id[1][2]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[2].id[1][3]") as String)
+        testString.append(try! SUT.valueForKey("category.posts[2].id[1][4]") as String)
+        
+        XCTAssertEqual("kyle crane", testString)
+    }
+
+    
+    func testEnumerateJSONConvertible_2Posts_isStuff()
+    {
+        // Arrange
+        let data =
+        [
+            "category":
+            [
+                "posts":
+                [
+                    ["titleText": "test1",
+                     "id": "1"],
+                    ["titleText": "test2",
+                     "id": "2"]
+                ]
+            ]
+        ]
+        
+        let SUT = JSONObject(collection: data)
+    
+        // Act
+        
+        var count = 0
+        SUT.enumerateObjects(ofType: Post.self, context: inMemoryPersistentContainer.viewContext, forKeyPath: "category.posts") { (index, jsonablePost) in
+            
+            count += 1
+            
+            guard let post = jsonablePost as? Post else { XCTFail(); return }
+            
+            XCTAssertEqual("\(count)", post.id)
+            
+            XCTAssertEqual(data["category"]?["posts"]?[count-1]["titleText"], post.title)
+            XCTAssertEqual(data["category"]?["posts"]?[count-1]["id"], post.id)
+        }
+        
+        XCTAssertEqual(count, 2)
+    }
+    
+    func testEnumerateJSONConvertible_5Posts_isStuff()
+    {
+        // Arrange
+        let data =
+            [
+                "category":
+                    [
+                        "posts":
+                            [
+                                ["titleText": "test1",
+                                 "id": "1"],
+                                ["titleText": "test2",
+                                 "id": "2"],
+                                ["titleText": "test3",
+                                 "id": "3"],
+                                ["titleText": "test4",
+                                 "id": "4"],
+                                ["titleText": "test5",
+                                 "id": "5"]
+                        ]
+                ]
+        ]
+        
+        let SUT = JSONObject(collection: data)
+        
+        // Act
+        var count = 0
+        SUT.enumerateObjects(ofType: Post.self, context: inMemoryPersistentContainer.viewContext, forKeyPath: "category.posts") { (index, jsonablePost) in
+            
+            count += 1
+            guard let post = jsonablePost as? Post else { XCTFail(); return }
+            
+            XCTAssertEqual("\(count)", post.id)
+            
+            XCTAssertEqual(data["category"]?["posts"]?[count-1]["titleText"], post.title)
+            XCTAssertEqual(data["category"]?["posts"]?[count-1]["id"], post.id)
+        }
+        
+        XCTAssertEqual(count, 5)
+    }
+    
+    func testEnumerateJSONConvertible_5JsonableTestable_isStuff()
+    {
+        // Arrange
+        let data =
+            [
+                "category":
+                    [
+                        "testables":
+                            [
+                                ["titleText": "test1",
+                                 "id": "1"],
+                                ["titleText": "test2",
+                                 "id": "2"],
+                                ["titleText": "test3",
+                                 "id": "3"],
+                                ["titleText": "test4",
+                                 "id": "4"],
+                                ["titleText": "test5",
+                                 "id": "5"]
+                        ]
+                ]
+        ]
+        
+        final class JSONableTestable: JSONAble
+        {
+            private(set) var titleText: String?
+            private(set) var id: String?
+            
+            static func initJSONAble(context: NSManagedObjectContext) -> JSONableTestable {
+                return JSONableTestable()
+            }
+            
+            func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String) throws {
+                
+                self.id = try JSONObject.valueForKey("\(keyPath).id")
+                self.titleText = try JSONObject.valueForKey("\(keyPath).titleText")
+            }
+        }
+        
+        let SUT = JSONObject(collection: data)
+        
+        // Act
+        var count = 0
+        SUT.enumerateObjects(ofType: JSONableTestable.self, context: inMemoryPersistentContainer.viewContext, forKeyPath: "category.testables") { (index, jsonableObject) in
+            
+            count += 1
+            guard let jsonTestable = jsonableObject as? JSONableTestable else { XCTFail(); return }
+            
+            XCTAssertEqual(data["category"]?["testables"]?[count-1]["titleText"], jsonTestable.titleText)
+            XCTAssertEqual(data["category"]?["testables"]?[count-1]["id"], jsonTestable.id)
+        }
+        
+        XCTAssertEqual(count, 5)
+    }
+
 }

@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-public class Category: NSManagedObject, JSONAble {
+final public class Category: NSManagedObject, JSONAble {
     
     func sorted(byType:ComparisonResult) -> [Post] {
         
@@ -29,6 +29,12 @@ public class Category: NSManagedObject, JSONAble {
         }
         
         return []
+    }
+    
+    static func initJSONAble(context: NSManagedObjectContext) -> Category {
+        
+        let category = Category(context: context)
+        return category
     }
     
     func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "") throws{
