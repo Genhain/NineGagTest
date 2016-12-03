@@ -154,13 +154,13 @@ final class JSONObject
         }
     }
     
-    func enumerateObjects(ofType type: JSONAble.Type, context: NSManagedObjectContext, forKeyPath keyPath: String, enumerationsClosure: (_ indexKey: String, _ element: JSONAble) -> Void) {
+    func enumerateObjects(ofType type: JSONAble.Type, forKeyPath keyPath: String, context: NSManagedObjectContext = NSManagedObjectContext.init(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType), enumerationsClosure: (_ element: JSONAble) -> Void) {
         
         for index in 0...self.countForRelationship(keyPath) - 1 {
-            let a = type.create(inContext: context)
-            try? a.fromJSON(self, context: context, keyPath: "\(keyPath)[\(index)]")
+            let deserialisedJSONObject = type.create(inContext: context)
+            try? deserialisedJSONObject.fromJSON(self, context: context, keyPath: "\(keyPath)[\(index)]")
             
-            enumerationsClosure("", a)
+            enumerationsClosure(deserialisedJSONObject)
         }
     }
     

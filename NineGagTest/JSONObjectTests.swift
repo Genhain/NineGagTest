@@ -10,6 +10,22 @@ import XCTest
 import CoreData
 @testable import NineGagTest
 
+fileprivate class JSONableTestable: JSONAble
+{
+    private(set) var titleText: String?
+    fileprivate(set) var id: String?
+    
+    static func create(inContext context: NSManagedObjectContext) -> Self {
+        return .init()
+    }
+    
+    func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String) throws {
+        
+        self.id = try JSONObject.valueForKey("\(keyPath).id")
+        self.titleText = try JSONObject.valueForKey("\(keyPath).titleText")
+    }
+}
+
 class JSONObjectTests: XCTestCase {
     
     var inMemoryPersistentContainer: NSPersistentContainer!
@@ -38,23 +54,18 @@ class JSONObjectTests: XCTestCase {
                      "id": "2"]]]
         ]
         
-        class JSONAbleTester: JSONAble
+        class JSONableTestableWithPosts: JSONableTestable
         {
-            private(set) var id: String?
             private(set) var posts: [[String: AnyObject]]?
             
-            fileprivate static func create(inContext context: NSManagedObjectContext) -> Self {
-                return .init()
-            }
-            
-            func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "[0]") throws {
+            override func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "[0]") throws {
                 self.id = try JSONObject.valueForKey("\(keyPath).id")
                 self.posts = try JSONObject.valueForKey("\(keyPath).posts")
             }
         }
         
         // Act
-        let spy = JSONAbleTester()
+        let spy = JSONableTestableWithPosts()
         
         let jsonObj = JSONObject(collection: data)
         
@@ -501,7 +512,7 @@ class JSONObjectTests: XCTestCase {
         // Act
         
         var count = 0
-        SUT.enumerateObjects(ofType: Post.self, context: inMemoryPersistentContainer.viewContext, forKeyPath: "category.posts") { (index, jsonablePost) in
+        SUT.enumerateObjects(ofType: Post.self, forKeyPath: "category.posts", context: inMemoryPersistentContainer.viewContext) { (jsonablePost) in
             
             count += 1
             
@@ -543,7 +554,7 @@ class JSONObjectTests: XCTestCase {
         
         // Act
         var count = 0
-        SUT.enumerateObjects(ofType: Post.self, context: inMemoryPersistentContainer.viewContext, forKeyPath: "category.posts") { (index, jsonablePost) in
+        SUT.enumerateObjects(ofType: Post.self, forKeyPath: "category.posts", context: inMemoryPersistentContainer.viewContext) { (jsonablePost) in
             
             count += 1
             guard let post = jsonablePost as? Post else { XCTFail(); return }
@@ -580,27 +591,11 @@ class JSONObjectTests: XCTestCase {
                 ]
         ]
         
-        class JSONableTestable: JSONAble
-        {
-            private(set) var titleText: String?
-            private(set) var id: String?
-            
-            fileprivate static func create(inContext context: NSManagedObjectContext) -> Self {
-                return .init()
-            }
-            
-            func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String) throws {
-                
-                self.id = try JSONObject.valueForKey("\(keyPath).id")
-                self.titleText = try JSONObject.valueForKey("\(keyPath).titleText")
-            }
-        }
-        
         let SUT = JSONObject(collection: data)
         
         // Act
         var count = 0
-        SUT.enumerateObjects(ofType: JSONableTestable.self, context: inMemoryPersistentContainer.viewContext, forKeyPath: "category.testables") { (index, jsonableObject) in
+        SUT.enumerateObjects(ofType: JSONableTestable.self, forKeyPath: "category.testables") { (jsonableObject) in
             
             count += 1
             guard let jsonTestable = jsonableObject as? JSONableTestable else { XCTFail(); return }
@@ -611,5 +606,40 @@ class JSONObjectTests: XCTestCase {
         
         XCTAssertEqual(count, 5)
     }
-
+    
+    
+    func testEnumerateJSONConvertible_3JsonableTestableWithoutContext_isStuff()
+    {
+        // Arrange
+        let data =
+            [
+                "category":
+                    [
+                        "testables":
+                            [
+                                ["titleText": "testabc",
+                                 "id": "a"],
+                                ["titleText": "test123",
+                                 "id": "b"],
+                                ["titleText": "test456",
+                                 "id": "c"]
+                        ]
+                ]
+        ]
+        
+        let SUT = JSONObject(collection: data)
+        
+        // Act
+        var count = 0
+        SUT.enumerateObjects(ofType: JSONableTestable.self, forKeyPath: "category.testables") { (jsonableObject) in
+            
+            count += 1
+            guard let jsonTestable = jsonableObject as? JSONableTestable else { XCTFail(); return }
+            
+            XCTAssertEqual(data["category"]?["testables"]?[count-1]["titleText"], jsonTestable.titleText)
+            XCTAssertEqual(data["category"]?["testables"]?[count-1]["id"], jsonTestable.id)
+        }
+        
+        XCTAssertEqual(count, 3)
+    }
 }
