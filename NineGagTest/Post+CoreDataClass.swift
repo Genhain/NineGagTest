@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-final public class Post: NSManagedObject, JSONAble {
+public class Post: NSManagedObject, JSONAble {
     
 
     public override func awakeFromInsert() {
@@ -21,11 +21,10 @@ final public class Post: NSManagedObject, JSONAble {
     
     }
     
-    static func initJSONAble(context: NSManagedObjectContext) -> Post {
-        return Post(context: context)
+    internal static func create(inContext context: NSManagedObjectContext) -> Self {
+        return .init(context: context)
     }
-
-
+    
     func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "") throws {
         
         self.title = try? JSONObject.valueForKey("\(keyPath).titleText")

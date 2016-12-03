@@ -38,13 +38,13 @@ class JSONObjectTests: XCTestCase {
                      "id": "2"]]]
         ]
         
-        final class JSONAbleTester: JSONAble
+        class JSONAbleTester: JSONAble
         {
             private(set) var id: String?
             private(set) var posts: [[String: AnyObject]]?
             
-            fileprivate static func initJSONAble(context: NSManagedObjectContext) -> JSONAbleTester {
-                return JSONAbleTester()
+            fileprivate static func create(inContext context: NSManagedObjectContext) -> Self {
+                return .init()
             }
             
             func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "[0]") throws {
@@ -87,14 +87,15 @@ class JSONObjectTests: XCTestCase {
                      "id": "4"]]]
         ]
         
-        final class JSONAbleTester: JSONAble
+        class JSONAbleTester: JSONAble
         {
             private(set) var id: String?
             private(set) var posts: [[String: AnyObject]]?
             
-            fileprivate static func initJSONAble(context: NSManagedObjectContext) -> JSONAbleTester {
-                return JSONAbleTester()
+            fileprivate static func create(inContext context: NSManagedObjectContext) -> Self {
+                return .init()
             }
+            
             func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "") throws {
                 self.id = try JSONObject.valueForKey("\(keyPath).id")
                 self.posts = try JSONObject.valueForKey("\(keyPath).posts")
@@ -579,13 +580,13 @@ class JSONObjectTests: XCTestCase {
                 ]
         ]
         
-        final class JSONableTestable: JSONAble
+        class JSONableTestable: JSONAble
         {
             private(set) var titleText: String?
             private(set) var id: String?
             
-            static func initJSONAble(context: NSManagedObjectContext) -> JSONableTestable {
-                return JSONableTestable()
+            fileprivate static func create(inContext context: NSManagedObjectContext) -> Self {
+                return .init()
             }
             
             func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String) throws {

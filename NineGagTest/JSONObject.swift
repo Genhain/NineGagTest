@@ -18,7 +18,7 @@ enum JSONError : Error {
 }
 
 protocol JSONAble {
-    static func initJSONAble(context: NSManagedObjectContext) -> Self
+    static func create(inContext context: NSManagedObjectContext) -> Self
     func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String) throws
 }
 
@@ -157,7 +157,7 @@ final class JSONObject
     func enumerateObjects(ofType type: JSONAble.Type, context: NSManagedObjectContext, forKeyPath keyPath: String, enumerationsClosure: (_ indexKey: String, _ element: JSONAble) -> Void) {
         
         for index in 0...self.countForRelationship(keyPath) - 1 {
-            let a = type.initJSONAble(context: context)
+            let a = type.create(inContext: context)
             try? a.fromJSON(self, context: context, keyPath: "\(keyPath)[\(index)]")
             
             enumerationsClosure("", a)

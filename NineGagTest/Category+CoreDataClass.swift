@@ -10,7 +10,22 @@ import Foundation
 import CoreData
 
 
-final public class Category: NSManagedObject, JSONAble {
+public class Category: NSManagedObject, JSONAble {
+    
+    internal static func create(inContext context: NSManagedObjectContext) -> Self {
+        return .init(context: context)
+    }
+    
+    func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "") throws {
+        try self.id = JSONObject.valueForKey("\(self.title!).id")
+        
+        JSONObject.enumerateObjects(atKeyPath: "\(self.title!).posts") { (keyIndex, element) in
+            let post = Post(context: context)
+            let jsonPostsObj = try? JSONObject.objectForKey("\(self.title!).posts")
+            try? post.fromJSON(jsonPostsObj!, context: context, keyPath: "[\(keyIndex)]")
+            self.addToToPost(post)
+        }
+    }
     
     func sorted(byType:ComparisonResult) -> [Post] {
         
@@ -31,21 +46,5 @@ final public class Category: NSManagedObject, JSONAble {
         return []
     }
     
-    static func initJSONAble(context: NSManagedObjectContext) -> Category {
-        
-        let category = Category(context: context)
-        return category
-    }
     
-    func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String = "") throws{
-        
-        try self.id = JSONObject.valueForKey("\(self.title!).id")
-        
-        JSONObject.enumerateObjects(atKeyPath: "\(self.title!).posts") { (keyIndex, element) in
-            let post = Post(context: context)
-            let jsonPostsObj = try? JSONObject.objectForKey("\(self.title!).posts")
-            try? post.fromJSON(jsonPostsObj!, context: context, keyPath: "[\(keyIndex)]")
-            self.addToToPost(post)
-        }
-    }
 }

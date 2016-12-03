@@ -10,10 +10,10 @@ import Foundation
 import CoreData
 
 
-final public class Image: NSManagedObject, JSONAble
+public class Image: NSManagedObject, JSONAble
 {
-    static func initJSONAble(context: NSManagedObjectContext) -> Image {
-        return Image(context: context)
+    internal static func create(inContext context: NSManagedObjectContext) -> Self {
+        return .init(context: context)
     }
 
     func fromJSON(_ JSONObject: JSONObject, context: NSManagedObjectContext, keyPath: String) throws {
